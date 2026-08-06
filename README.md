@@ -6,7 +6,7 @@ Write beautiful code with English-like syntax — right in your browser. No inst
 
 ## 🚀 Try It Now
 
-**[Launch Littlestar Studio](https://yourusername.github.io/littlestar-studio/app.html)**
+**[Launch Littlestar Studio](https://paschal6.github.io/littlestar-app/app)**
 
 ## ✨ Features
 
