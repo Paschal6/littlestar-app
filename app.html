@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="favicon.png" rel="icon" type="image/x-icon" />
   <title>🌟 Littlestar Playground</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2492,30 +2491,17 @@ function loadFromStorage(){
 }
 
 // ─── TAB RENDERER ───────────────────────────────────────
+// ─── TAB RENDERER ───────────────────────────────────────
 function renderTabs(){
   const bar=document.getElementById('tab-bar');
   const newBtn=document.getElementById('tab-new');
-  // Remove all tabs (not the + button)
   Array.from(bar.querySelectorAll('.tab')).forEach(t=>t.remove());
 
   files.forEach(file=>{
     const div=document.createElement('div');
     div.className='tab'+(file.id===activeFileId?' active':'');
-    div.title='Double-click to rename';
-
-    if(renamingId===file.id){
-      div.innerHTML=`<span>📄</span>`;
-      const inp=document.createElement('input');
-      inp.className='tab-rename-input';
-      inp.value=file.name;
-      inp.onclick=e=>e.stopPropagation();
-      inp.onblur=()=>finishRename(inp.value);
-      inp.onkeydown=e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){renamingId=null;renderTabs();}};
-      div.appendChild(inp);
-      setTimeout(()=>inp.focus(),0);
-    }else{
-      div.innerHTML=`<span>📄</span><span style="font-size:13px">${esc(file.name)}</span>`;
-    }
+    div.title='Double-click (or long-press) to rename';
+    div.innerHTML=`<span>📄</span><span style="font-size:13px">${esc(file.name)}</span>`;
 
     if(files.length>1){
       const cls=document.createElement('button');
@@ -2524,11 +2510,32 @@ function renderTabs(){
       div.appendChild(cls);
     }
 
-    div.onclick=()=>{ activeFileId=file.id; renamingId=null; renderAll(); };
-    div.ondblclick=e=>{ e.stopPropagation(); renamingId=file.id; renderTabs(); };
+    div.onclick=()=>{ activeFileId=file.id; renderAll(); };
+    div.ondblclick=e=>{ e.stopPropagation(); promptRename(file.id, file.name); };
+
+    // Long-press for mobile (touch devices)
+    let pressTimer=null;
+    div.addEventListener('touchstart',e=>{
+      pressTimer=setTimeout(()=>{
+        promptRename(file.id,file.name);
+      },600); // 600ms long press
+    },{passive:true});
+    div.addEventListener('touchend',()=>{ if(pressTimer)clearTimeout(pressTimer); });
+    div.addEventListener('touchmove',()=>{ if(pressTimer)clearTimeout(pressTimer); });
 
     bar.insertBefore(div,newBtn);
   });
+}
+
+// ─── MOBILE-FRIENDLY RENAME (uses prompt) ──────────────
+function promptRename(id, currentName){
+  const newName = window.prompt('Rename file:', currentName);
+  if(newName===null) return; // cancelled
+  let name = newName.trim();
+  if(!name) return;
+  if(!name.endsWith('.lstar')) name += '.lstar';
+  files = files.map(f => f.id===id ? {...f, name} : f);
+  renderAll();
 }
 
 // ─── EDITOR RENDERER ────────────────────────────────────
