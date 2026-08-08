@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://paschal6.github.io/littlestar-app/sitemap.xml
