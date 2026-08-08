@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="favicon.ico" type="image/x-icon" />
   <title>🌟 Littlestar Playground</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -907,7 +906,8 @@ class Littlestar {
       abs:`Math.abs`,approximate:`Math.round`,
       round:`((n,d=0)=>{const p=Math.pow(10,d);return Math.round(n*p)/p;})`,
       decimals:`((n,d)=>Number(Number(n).toFixed(d)))`,
-      min:`Math.min`,max:`Math.max`,exp:`Math.exp`,floor:`Math.floor`,ceil:`Math.ceil`,sign:`Math.sign`,
+      min:`((...args)=>{const a=args.length===1&&Array.isArray(args[0])?args[0]:args;return Math.min(...a);})`,
+      max:`((...args)=>{const a=args.length===1&&Array.isArray(args[0])?args[0]:args;return Math.max(...a);})`,exp:`Math.exp`,floor:`Math.floor`,ceil:`Math.ceil`,sign:`Math.sign`,
       log:`((n,b)=>b?Math.log(n)/Math.log(b):Math.log(n))`,ln:`Math.log`,
       log10:`((n,b)=>b?Math.log(n)/Math.log(b):Math.log10(n))`,log2:`Math.log2`,
       logbase:`((n,b)=>Math.log(n)/Math.log(b))`,antilog:`((n,b=10)=>Math.pow(b,n))`,
@@ -1272,9 +1272,11 @@ class Littlestar {
       return;
     }
 
-    let m=line.match(/^import\s+(\w+)(?:\s+from\s+(\w+))?\s*$/);
+    let m=line.match(/^import\s+(\w+)(?:\s+from\s+([\w.]+))?\s*$/);
     if(m){
-      const target=m[1],fromFile=m[2];
+      const target=m[1];
+      let fromFile=m[2];
+      if(fromFile)fromFile=fromFile.replace(/\.lstar$/,'');
       const fileName=fromFile||target,specificFn=fromFile?target:null;
       const fc=this.importFromModule(fileName,specificFn);
       if(!fc)throw new LittlestarError(`🌟 No exported functions found in ${fileName}.lstar`);
