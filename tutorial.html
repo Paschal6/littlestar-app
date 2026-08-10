@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Littlestar Tutorial — Complete Guide for Beginners</title>
+<meta name="description" content="Complete beginner-friendly tutorial for the Littlestar programming language. Learn programming from scratch with step-by-step examples.">
+<meta name="keywords" content="littlestar tutorial, learn programming, coding for beginners, littlestar language, programming tutorial">
+<meta name="author" content="Godspower Kenneth U.">
+<link rel="canonical" href="https://paschal6.github.io/littlestar-app/tutorial.html">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#f5f5f5;color:#333;line-height:1.8;}
+
+.sidebar{
+  position:fixed;top:0;left:0;width:300px;height:100vh;
+  background:#1a1a2e;color:#cdd6f4;overflow-y:auto;z-index:100;
+  border-right:2px solid #F5A623;transition:transform .3s;
+}
+.sidebar-header{
+  padding:20px;background:#0f0f1e;border-bottom:1px solid rgba(245,166,35,.2);
+  display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:1;
+}
+.sidebar-header h2{font-size:1.1rem;color:#F5A623;font-weight:800;}
+.sidebar-header .logo{font-size:1.5rem;}
+.sidebar nav{padding:10px 0;}
+.sidebar a{
+  display:block;padding:8px 20px;color:#94a3b8;text-decoration:none;
+  font-size:.85rem;border-left:3px solid transparent;transition:all .15s;
+}
+.sidebar a:hover{background:rgba(245,166,35,.1);color:#F5A623;border-left-color:#F5A623;}
+.sidebar a.active{background:rgba(245,166,35,.15);color:#F5A623;border-left-color:#F5A623;font-weight:600;}
+.sidebar .section-label{
+  padding:14px 20px 4px;font-size:.65rem;text-transform:uppercase;
+  letter-spacing:1.5px;color:#64748b;font-weight:700;
+}
+
+.main{margin-left:300px;padding:0;}
+.topbar{
+  position:sticky;top:0;z-index:50;background:#fff;
+  padding:14px 40px;border-bottom:1px solid #e2e8f0;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+}
+.topbar h1{font-size:1rem;color:#1a1a2e;font-weight:700;}
+.topbar-btns{display:flex;gap:10px;}
+.topbar-btns a{
+  padding:8px 16px;border-radius:8px;font-size:.85rem;font-weight:600;
+  text-decoration:none;transition:all .2s;
+}
+.btn-try{background:linear-gradient(135deg,#F5A623,#D4891A);color:#0a0a15;}
+.btn-try:hover{box-shadow:0 4px 12px rgba(245,166,35,.4);}
+.btn-github{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
+.btn-github:hover{background:#e2e8f0;}
+
+.content{max-width:860px;padding:40px;margin:0 auto;}
+
+.hamburger{
+  display:none;background:none;border:none;font-size:1.5rem;
+  cursor:pointer;color:#1a1a2e;padding:4px 8px;
+}
+
+.tutorial-section{
+  background:#fff;border-radius:12px;padding:36px;margin-bottom:28px;
+  border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.tutorial-section h2{
+  font-size:1.5rem;font-weight:800;color:#1a1a2e;
+  margin-bottom:8px;padding-bottom:12px;border-bottom:2px solid #F5A623;
+}
+.tutorial-section h3{
+  font-size:1.1rem;font-weight:700;color:#334155;margin:24px 0 10px;
+}
+.tutorial-section h4{
+  font-size:.95rem;font-weight:600;color:#475569;margin:16px 0 6px;
+}
+.tutorial-section p{margin-bottom:14px;color:#475569;}
+.tutorial-section ul,.tutorial-section ol{margin:0 0 14px 24px;color:#475569;}
+.tutorial-section li{margin-bottom:6px;}
+.tutorial-section strong{color:#1a1a2e;}
+.tutorial-section code{
+  font-family:'JetBrains Mono',monospace;background:#f1f5f9;
+  padding:2px 6px;border-radius:4px;font-size:.85rem;color:#7c3aed;
+}
+
+pre{
+  background:#0f0f1e;color:#cdd6f4;padding:20px;border-radius:10px;
+  font-family:'JetBrains Mono',monospace;font-size:.85rem;line-height:1.7;
+  overflow-x:auto;margin:10px 0 18px;border:1px solid #2d2d5e;
+  position:relative;
+}
+pre .label{
+  position:absolute;top:8px;right:12px;
+  font-size:.65rem;color:#cdd280;font-family:'Inter',sans-serif;
+  background:#2a2a2e;padding:2px 8px;border-radius:4px;
+}
+pre code{background:none;padding:0;color:inherit;}
+
+.output{
+  background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;
+  padding:14px 18px;font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;line-height:1.7;margin:0 0 18px;color:#166534;
+}
+.output::before{
+  content:'✨ Output:';display:block;font-family:'Inter',sans-serif;
+  font-weight:600;font-size:.75rem;color:#15803d;margin-bottom:6px;
+}
+
+.box{
+  padding:14px 18px;border-radius:10px;margin:14px 0 18px;
+  font-size:.9rem;border-left:4px solid;
+}
+.box-info{background:#eff6ff;border-color:#3b82f6;color:#1e40af;}
+.box-warn{background:#fefce8;border-color:#eab308;color:#854d0e;}
+.box-tip{background:#f0fdf4;border-color:#22c55e;color:#166534;}
+.box-danger{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
+.box strong{display:block;margin-bottom:4px;}
+
+table{
+  width:100%;border-collapse:collapse;margin:10px 0 18px;font-size:.88rem;
+}
+th{
+  background:#1a1a2e;color:#F5A623;padding:10px 14px;
+  text-align:left;font-weight:600;font-size:.82rem;
+}
+td{padding:8px 14px;border-bottom:1px solid #e2e8f0;color:#475569;font-size:.85rem;}
+tr:hover td{background:#f8fafc;}
+tr:nth-child(even) td{background:#f9fafb;}
+
+.tutorial-footer{
+  text-align:center;padding:40px;color:#94a3b8;font-size:.85rem;
+  border-top:1px solid #e2e8f0;margin-top:40px;
+}
+.tutorial-footer a{color:#F5A623;text-decoration:none;}
+
+.nav-buttons{
+  display:flex;justify-content:space-between;gap:16px;
+  margin-top:40px;padding-top:24px;border-top:1px solid #e2e8f0;
+}
+.nav-btn{
+  padding:12px 24px;border-radius:10px;text-decoration:none;
+  font-weight:600;font-size:.9rem;transition:all .2s;flex:1;text-align:center;
+}
+.nav-prev{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
+.nav-next{background:linear-gradient(135deg,#F5A623,#D4891A);color:#0a0a15;}
+.nav-prev:hover{background:#e2e8f0;}
+.nav-next:hover{box-shadow:0 4px 12px rgba(245,166,35,.4);}
+
+.chapter-num{
+  display:inline-block;background:#F5A623;color:#0a0a15;
+  width:28px;height:28px;border-radius:50%;text-align:center;
+  line-height:28px;font-size:.75rem;font-weight:800;margin-right:8px;
+
+}
+
+.sp {
+    background: transparent !important;
+    color: rgb(167, 140, 167) !important;
+}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .hamburger{display:block;}
+  .content{padding:24px 16px;}
+  .tutorial-section{padding:24px 20px;}
+  .topbar{padding:14px 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="logo">🌟</span>
+    <h2>Littlestar Tutorial</h2>
+  </div>
+  <nav>
+    <div class="section-label">🏠 Introduction</div>
+    <a href="#welcome">Welcome</a>
+    <a href="#what-is-programming">What is Programming?</a>
+    <a href="#why-littlestar">Why Littlestar?</a>
+    <a href="#setup">Getting Started</a>
+    <a href="#your-first-program">Your First Program</a>
+
+    <div class="section-label">📝 Chapter 1: Basics</div>
+    <a href="#program-structure">Program Structure</a>
+    <a href="#displaying-text">Displaying Text</a>
+    <a href="#three-output-styles">Three Output Styles</a>
+    <a href="#comments">Comments</a>
+    <a href="#blank-lines">Blank Lines (lbr)</a>
+
+    <div class="section-label">📦 Chapter 2: Variables</div>
+    <a href="#what-are-variables">What Are Variables?</a>
+    <a href="#declaring-variables">Declaring Variables</a>
+    <a href="#updating-variables">Updating Variables</a>
+    <a href="#constants">Constants (fix)</a>
+    <a href="#deleting-variables">Deleting Variables</a>
+    <a href="#swapping">Swapping Variables</a>
+    <a href="#string-interpolation">String Interpolation</a>
+
+    <div class="section-label">📊 Chapter 3: Data Types</div>
+    <a href="#numbers">Numbers</a>
+    <a href="#strings">Strings</a>
+    <a href="#booleans">Booleans (yes/no)</a>
+    <a href="#type-checking">Type Checking</a>
+
+    <div class="section-label">⚡ Chapter 4: Operators</div>
+    <a href="#arithmetic">Arithmetic</a>
+    <a href="#comparison">Comparison</a>
+    <a href="#logical">Logical (and/or/not)</a>
+    <a href="#string-joining">String Joining</a>
+
+    <div class="section-label">🔀 Chapter 5: Decisions</div>
+    <a href="#when">when (if)</a>
+    <a href="#elif">elif (else if)</a>
+    <a href="#otherwise">otherwise (else)</a>
+    <a href="#nested-conditions">Nested Conditions</a>
+    <a href="#match-case">match/case</a>
+    <a href="#contains-keyword">contains Keyword</a>
+
+    <div class="section-label">🔁 Chapter 6: Loops</div>
+    <a href="#while-loops">while Loops</a>
+    <a href="#counting-loops">Counting Loops</a>
+    <a href="#stop-break">stop (break)</a>
+    <a href="#skip-continue">skip (continue)</a>
+    <a href="#loop-patterns">Loop Patterns</a>
+    <a href="#repeat-this">repeat this</a>
+
+    <div class="section-label">📚 Chapter 7: Arrays</div>
+    <a href="#what-are-arrays">What Are Arrays?</a>
+    <a href="#creating-arrays">Creating Arrays (letarr)</a>
+    <a href="#accessing-elements">Accessing Elements</a>
+    <a href="#modifying-arrays">Modifying Arrays</a>
+    <a href="#array-math">Array Math</a>
+    <a href="#looping-arrays">Looping Through Arrays</a>
+    <a href="#array-searching">Searching Arrays</a>
+    <a href="#array-sorting">Sorting Arrays</a>
+
+    <div class="section-label">⚙️ Chapter 8: Functions</div>
+    <a href="#what-are-functions">What Are Functions?</a>
+    <a href="#creating-functions">Creating Functions</a>
+    <a href="#parameters">Parameters</a>
+    <a href="#return-values">Return Values</a>
+    <a href="#private-functions">Private Functions</a>
+    <a href="#export-import">Export & Import</a>
+
+    <div class="section-label">🧮 Chapter 9: Math</div>
+    <a href="#basic-math">Basic Math Functions</a>
+    <a href="#rounding">Rounding & Formatting</a>
+    <a href="#comma-formatting">Comma Formatting</a>
+    <a href="#advanced-math">Advanced Math</a>
+    <a href="#trigonometry">Trigonometry</a>
+    <a href="#statistics">Statistics</a>
+    <a href="#number-systems">Number Systems</a>
+    <a href="#fractions">Fractions</a>
+
+    <div class="section-label">📝 Chapter 10: Strings</div>
+    <a href="#string-case">Case Functions</a>
+    <a href="#string-search">Searching Strings</a>
+    <a href="#string-modify">Modifying Strings</a>
+    <a href="#string-info">String Information</a>
+
+    <div class="section-label">📐 Chapter 11: Geometry</div>
+    <a href="#area">Area</a>
+    <a href="#perimeter">Perimeter</a>
+    <a href="#volume">Volume</a>
+
+    <div class="section-label">💰 Chapter 12: Conversions</div>
+    <a href="#currency">Currency (Live!)</a>
+    <a href="#units">Unit Conversion</a>
+
+    <div class="section-label">🌐 Chapter 13: Web</div>
+    <a href="#tohtml-tocss">toHtml / toCss / toJavascript</a>
+    <a href="#web-block">web: Block (HTML5)</a>
+
+    <div class="section-label">💬 Chapter 14: Input</div>
+    <a href="#text-input">Text Input</a>
+    <a href="#number-input">Number Input</a>
+    <a href="#password-input">Password Input</a>
+    <a href="#confirm-alert">Confirm & Alert</a>
+
+    <div class="section-label">🗄️ Chapter 15: Databases</div>
+    <a href="#creating-db">Creating Databases</a>
+    <a href="#querying-db">Querying Data</a>
+    <a href="#db-functions">Database Functions</a>
+
+    <div class="section-label">💾 Chapter 16: Files</div>
+    <a href="#write-read">Write & Read</a>
+    <a href="#append-exists">Append & Exists</a>
+    <a href="#export-delete">Export & Delete</a>
+
+    <div class="section-label">🏗️ Chapter 17: Objects</div>
+    <a href="#creating-objects">Creating Objects</a>
+    <a href="#accessing-properties">Accessing Properties</a>
+
+    <div class="section-label">🛡️ Chapter 18: Error Handling</div>
+    <a href="#compile-otherwise">compile / otherwise</a>
+    <a href="#assert">assert</a>
+
+    <div class="section-label">🔧 Chapter 19: Advanced</div>
+    <a href="#random">Random Functions</a>
+    <a href="#datetime">Date & Time</a>
+    <a href="#json">JSON</a>
+    <a href="#http">HTTP Requests</a>
+    <a href="#sleep">Sleep</a>
+    <a href="#debug-mode">Debug Mode</a>
+    <a href="#creator-mode">Creator Mode</a>
+
+    <div class="section-label">📋 Reference</div>
+    <a href="#all-keywords">All Keywords</a>
+    <a href="#all-functions">All 170+ Functions</a>
+    <a href="#all-constants">All Constants</a>
+    <a href="#common-errors">Common Errors</a>
+    <a href="#best-practices">Best Practices</a>
+    <a href="#example-projects">Example Projects</a>
+  </nav>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <h1>🌟 Littlestar — Complete Tutorial for Beginners</h1>
+    </div>
+    <div class="topbar-btns">
+      <a href="https://paschal6.github.io/littlestar-app/app.html" class="btn-try topbar-btn">▶ Try It</a>
+      <a href="https://github.com/Paschal6/littlestar-app" class="btn-github topbar-btn">⭐ GitHub</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+<!-- ══════════════════════════════════════════════════════
+     INTRODUCTION
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="welcome">
+  <h2><span class="chapter-num">🌟</span> Welcome to Littlestar!</h2>
+  <p>Welcome! If you've never written a single line of code before — you're in <strong>exactly the right place</strong>.</p>
+  <p>This tutorial will teach you everything you need to know about programming using <strong>Littlestar</strong>, a language specifically designed for beginners. We'll start from the very beginning and build up your skills step by step.</p>
+
+  <div class="box box-tip">
+    <strong>💡 What You'll Learn</strong>
+    By the end of this tutorial, you'll be able to:
+    <ul style="margin:8px 0 0 16px;">
+      <li>Write programs that solve real problems</li>
+      <li>Use variables, loops, conditions, and functions</li>
+      <li>Work with arrays, math, strings, and databases</li>
+      <li>Build web pages from code</li>
+      <li>Convert currencies and units</li>
+      <li>Create interactive programs with user input</li>
+    </ul>
+  </div>
+
+  <h3>How to Use This Tutorial</h3>
+  <ol>
+    <li><strong>Read each section carefully</strong> — don't skip ahead!</li>
+    <li><strong>Type every example yourself</strong> — don't just read, DO it</li>
+    <li><strong>Experiment!</strong> Change the examples. Break things. Fix them.</li>
+    <li><strong>Use the playground</strong> — <a href="https://paschal6.github.io/littlestar-app/app.html" style="color:#F5A623;">Open Littlestar Studio</a> in another tab</li>
+  </ol>
+
+  <div class="box box-info">
+    <strong>ℹ️ No Installation Required!</strong>
+    Littlestar runs entirely in your web browser. Just open the <a href="https://paschal6.github.io/littlestar-app/app.html" style="color:#3b82f6;">Littlestar Studio</a> and start typing code. That's it!
+  </div>
+</div>
+
+<div class="tutorial-section" id="what-is-programming">
+  <h2><span class="chapter-num">📖</span> What is Programming?</h2>
+  <p>Imagine you have a robot assistant. Programming is simply <strong>writing instructions</strong> that tell the robot exactly what to do.</p>
+  <p>For example, if you wanted to tell your robot to make tea, you'd write something like:</p>
+
+<pre><code class="sp"><span class="label">English</span>1. Boil water
+2. Put tea bag in cup
+3. Pour water into cup
+4. Wait 3 minutes
+5. Remove tea bag
+6. Add sugar if wanted</code></pre>
+
+  <p>That's programming! A computer is your "robot" — and the instructions you write are called <strong>code</strong>.</p>
+
+  <h3>What is a Programming Language?</h3>
+  <p>Just like humans speak different languages (English, French, Spanish), computers understand different <strong>programming languages</strong>. Some popular ones include:</p>
+
+  <table>
+    <tr><th>Language</th><th>Used For</th><th>Difficulty</th></tr>
+    <tr><td>Python</td><td>AI, science, web</td><td>Medium</td></tr>
+    <tr><td>JavaScript</td><td>Websites, apps</td><td>Medium</td></tr>
+    <tr><td>C++</td><td>Games, systems</td><td>Hard</td></tr>
+    <tr><td><strong>Littlestar</strong></td><td><strong>Learning to code!</strong></td><td><strong>Easy ⭐</strong></td></tr>
+  </table>
+
+  <p><strong>Littlestar</strong> was designed to be the <em>easiest</em> programming language to learn. It reads almost like English!</p>
+
+  <h3>Why Should You Learn to Code?</h3>
+  <ul>
+    <li>💼 <strong>Career</strong> — Programmers are in high demand worldwide</li>
+    <li>🧠 <strong>Problem Solving</strong> — Coding teaches you to think logically</li>
+    <li>💡 <strong>Creativity</strong> — Build anything you can imagine</li>
+    <li>🤖 <strong>Automation</strong> — Make computers do boring work for you</li>
+    <li>🎮 <strong>Fun</strong> — Create games, art, music, and more</li>
+  </ul>
+</div>
+
+<div class="tutorial-section" id="why-littlestar">
+  <h2><span class="chapter-num">⭐</span> Why Littlestar?</h2>
+  <p>Most programming languages look scary to beginners. Here's what Python looks like vs. Littlestar:</p>
+
+  <h4>Python:</h4>
+<pre><code class="sp"><span class="label">Python</span>def greet(name):
+    if name == "Alice":
+        print(f"Hello, {name}!")
+    else:
+        print("Who are you?")
+
+greet("Alice")</code></pre>
+
+  <h4>Littlestar:</h4>
+<pre><code class="sp"><span class="label">Littlestar</span>func greet(name):
+    when name == "Alice":
+        display("Hello, {name}!")
+    otherwise:
+        display("Who are you?")
+
+greet("Alice")</code></pre>
+
+  <p>Notice how Littlestar uses <strong>English words</strong> you already know:</p>
+  <ul>
+    <li><code class="sp">display</code> instead of <code class="sp">print</code> — makes more sense!</li>
+    <li><code class="sp">when</code> instead of <code class="sp">if</code> — reads like English</li>
+    <li><code class="sp">otherwise</code> instead of <code class="sp">else</code> — clearer meaning</li>
+    <li><code class="sp">declare</code> instead of <code class="sp">let</code> or <code class="sp">var</code> — tells you what's happening</li>
+  </ul>
+
+  <h3>Littlestar's Superpowers</h3>
+  <table>
+    <tr><th>Feature</th><th>What It Means</th></tr>
+    <tr><td>🎓 English-like syntax</td><td>Code reads like sentences you already understand</td></tr>
+    <tr><td>📦 170+ built-in functions</td><td>Tons of tools ready to use — no downloading</td></tr>
+    <tr><td>🌐 Zero installation</td><td>Works in any browser — just open and code</td></tr>
+    <tr><td>💡 Helpful error messages</td><td>When you make a mistake, Littlestar tells you HOW to fix it</td></tr>
+    <tr><td>📱 Works on phones</td><td>Code anywhere — even on your phone!</td></tr>
+    <tr><td>💰 128 currencies</td><td>Convert money between any country</td></tr>
+    <tr><td>📐 19 shapes</td><td>Calculate area, perimeter, volume</td></tr>
+    <tr><td>🌐 Build websites</td><td>Create HTML/CSS/JS pages from code</td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="setup">
+  <h2><span class="chapter-num">🚀</span> Getting Started</h2>
+  <p>Let's set up your coding environment. Don't worry — it takes about <strong>10 seconds</strong>!</p>
+
+  <h3>Step 1: Open Littlestar Studio</h3>
+  <p>Click this link to open the editor: <a href="https://paschal6.github.io/littlestar-app/app.html" style="color:#F5A623;font-weight:700;">→ Launch Littlestar Studio</a></p>
+  <p>Or type this in your browser: <code class="sp">paschal6.github.io/littlestar-app/app.html</code></p>
+
+  <h3>Step 2: Look at the Screen</h3>
+  <p>You'll see two main areas:</p>
+  <table>
+    <tr><th>Area</th><th>What It Does</th></tr>
+    <tr><td><strong>📝 Left side (Editor)</strong></td><td>This is where you TYPE your code</td></tr>
+    <tr><td><strong>✨ Right side (Output)</strong></td><td>This is where you SEE the results</td></tr>
+  </table>
+
+  <h3>Step 3: Know Your Buttons</h3>
+  <table>
+    <tr><th>Button</th><th>What It Does</th></tr>
+    <tr><td>▶️ <strong>Run</strong></td><td>Runs your code (keyboard: Ctrl+Enter)</td></tr>
+    <tr><td>⚡ <strong>Run All</strong></td><td>Runs all open files</td></tr>
+    <tr><td>🗑️ <strong>Clear</strong></td><td>Clears the output screen</td></tr>
+    <tr><td>📥 <strong>Save</strong></td><td>Downloads your code as a .lstar file</td></tr>
+    <tr><td>📂 <strong>Open</strong></td><td>Opens a .lstar file from your computer</td></tr>
+    <tr><td>📁 <strong>Load Example</strong></td><td>Loads a pre-made example</td></tr>
+  </table>
+
+  <div class="box box-tip">
+    <strong>💡 Pro Tip: Keyboard Shortcut</strong>
+    Press <strong>Ctrl+Enter</strong> (or ⌘+Enter on Mac) to run your code instantly — no need to click the button!
+  </div>
+
+  <h3>Step 4: You're Ready!</h3>
+  <p>That's it! No downloads. No installations. No accounts to create. Let's write your first program! 🎉</p>
+</div>
+
+<div class="tutorial-section" id="your-first-program">
+  <h2><span class="chapter-num">1</span> Your First Program</h2>
+  <p>Every programmer in history started with the same program: <strong>"Hello, World!"</strong></p>
+  <p>This is a tradition that dates back to 1978. Let's continue it!</p>
+
+  <h3>Type This Code</h3>
+  <p>Delete everything in the editor and type this <strong>exactly</strong>:</p>
+
+<pre><code class="sp"><span class="label">hello.lstar</span>module littlestar:
+
+    spark main(1):
+        display("Hello, World!")
+
+    spark print:
+        main(1)</code></pre>
+
+  <h3>Run It</h3>
+  <p>Click the <strong>▶️ Run</strong> button (or press Ctrl+Enter).</p>
+
+  <h3>You Should See</h3>
+  <div class="output">Hello, World!</div>
+
+  <p>🎉 <strong>Congratulations!</strong> You just wrote your first program! You are now officially a programmer!</p>
+
+  <h3>Let's Understand Every Line</h3>
+
+  <h4>Line 1: <code class="sp">module littlestar:</code></h4>
+  <p>This tells the computer: <em>"Hey, this is a Littlestar program!"</em></p>
+  <p>Think of it like writing your name at the top of a test paper. <strong>Every Littlestar program must start with this line.</strong></p>
+
+  <h4>Line 3: <code class="sp">spark main(1):</code></h4>
+  <p>This creates a <strong>code block</strong> — a container for your instructions.</p>
+  <ul>
+    <li><code class="sp">spark</code> means "create a block"</li>
+    <li><code class="sp">main</code> means "this is a main block"</li>
+    <li><code class="sp">(1)</code> means "this is block number 1"</li>
+    <li><code class="sp">:</code> means "here's what's inside"</li>
+  </ul>
+  <p>Think of it like a chapter in a book: <em>"Chapter 1 begins here."</em></p>
+
+  <h4>Line 4: <code class="sp">display("Hello, World!")</code></h4>
+  <p>This is the instruction that actually does something! It tells the computer to show the text <code class="sp">"Hello, World!"</code> on screen.</p>
+  <ul>
+    <li><code class="sp">display</code> is a <strong>function</strong> — a command that does something</li>
+    <li><code class="sp">("Hello, World!")</code> is the <strong>message</strong> you want to show</li>
+    <li>The quotes <code class="sp">"..."</code> tell Littlestar "this is text, not code"</li>
+  </ul>
+
+  <h4>Lines 6-7: <code class="sp">spark print:</code> and <code class="sp">main(1)</code></h4>
+  <p>This tells Littlestar <strong>which blocks to run</strong> and in what order.</p>
+  <p>Think of it like a playlist: <em>"Play chapter 1."</em></p>
+
+  <div class="box box-warn">
+    <strong>⚠️ Important Rules (Remember These!)</strong>
+    <ul style="margin:8px 0 0 16px;">
+      <li>Every program MUST start with <code class="sp">module littlestar:</code></li>
+      <li>Every program MUST end with a <code class="sp">spark print:</code> block</li>
+      <li>Code inside blocks must be <strong>indented with 4 spaces</strong> (or press Tab)</li>
+      <li>Block numbers must go in order: 1, 2, 3...</li>
+    </ul>
+  </div>
+
+  <h3>🏋️ Exercise: Try It Yourself!</h3>
+  <p>Change the message to something different:</p>
+<pre><code class="sp"><span class="label">Try this!</span>module littlestar:
+
+    spark main(1):
+        display("My name is _____!")
+        display("I am learning to code!")
+        display("This is amazing! 🌟")
+
+    spark print:
+        main(1)</code></pre>
+  <p>Replace <code class="sp">_____</code> with your actual name, then run it!</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 1: BASICS
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="program-structure">
+  <h2><span class="chapter-num">2</span> Program Structure</h2>
+  <p>Every Littlestar program follows the same basic recipe, like a sandwich:</p>
+
+<pre><code class="sp"><span class="label">Structure</span>module littlestar:            ← TOP BUN (always first)
+
+    spark main(1):              ← FILLING (your code)
+        # your code goes here
+
+    spark main(2):              ← MORE FILLING (optional)
+        # more code here
+
+    spark print:                ← BOTTOM BUN (always last)
+        main(1)
+        main(2)</code></pre>
+
+  <h3>Multiple Blocks</h3>
+  <p>You can organize your code into multiple blocks, like chapters in a book:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        display("=== Chapter 1 ===")
+        display("Once upon a time...")
+
+    spark main(2):
+        display("=== Chapter 2 ===")
+        display("The adventure continues...")
+
+    spark main(3):
+        display("=== Chapter 3 ===")
+        display("The End!")
+
+    spark print:
+        main(1)
+        main(2)
+        main(3)</code></pre>
+  <div class="output">=== Chapter 1 ===
+Once upon a time...
+=== Chapter 2 ===
+The adventure continues...
+=== Chapter 3 ===
+The End!</div>
+
+  <div class="box box-tip">
+    <strong>💡 Why Multiple Blocks?</strong>
+    <ul style="margin:8px 0 0 16px;">
+      <li><strong>Organization</strong> — keep related code together</li>
+      <li><strong>Order control</strong> — choose which blocks run and when</li>
+      <li><strong>Selective running</strong> — skip blocks by removing them from <code class="sp">spark print:</code></li>
+    </ul>
+  </div>
+</div>
+
+<div class="tutorial-section" id="displaying-text">
+  <h2><span class="chapter-num">3</span> Displaying Text</h2>
+  <p>The most basic thing a program can do is show text on screen. In Littlestar, you use <code class="sp">display()</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>display("Hello!")
+display("My name is Littlestar")
+display("I can show any text you want!")</code></pre>
+  <div class="output">Hello!
+My name is Littlestar
+I can show any text you want!</div>
+
+  <h3>Rules for Text</h3>
+  <ul>
+    <li>Text must be wrapped in <strong>quotes</strong>: <code class="sp">"like this"</code> or <code class="sp">'like this'</code></li>
+    <li>Double quotes <code class="sp">"..."</code> and single quotes <code class="sp">'...'</code> both work</li>
+    <li>You can include emojis: <code class="sp">display("🌟 Stars! ⭐")</code></li>
+    <li>You can include numbers: <code class="sp">display("I am 25 years old")</code></li>
+  </ul>
+
+  <h3>Joining Text Together</h3>
+  <p>Use the <code class="sp">+</code> sign to join (concatenate) text:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>display("Hello" + " " + "World")
+display("1 + 1 = " + 2)
+display("My age is " + 25)</code></pre>
+  <div class="output">Hello World
+1 + 1 = 2
+My age is 25</div>
+</div>
+
+<div class="tutorial-section" id="three-output-styles">
+  <h2><span class="chapter-num">4</span> Three Output Styles</h2>
+  <p>Littlestar has <strong>three different ways</strong> to display text, each with its own style:</p>
+
+  <table>
+    <tr><th>Function</th><th>Style</th><th>Best For</th></tr>
+    <tr><td><code class="sp">display()</code></td><td>Normal green text</td><td>Regular output</td></tr>
+    <tr><td><code class="sp">shine()</code></td><td>✨ Yellow sparkly text</td><td>Highlighting something</td></tr>
+    <tr><td><code class="sp">glow()</code></td><td>🌟 Pink bold text</td><td>Important messages</td></tr>
+  </table>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        display("This is normal text")
+        shine("This is sparkly! ✨")
+        glow("This is GLOWING! 🌟")
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">This is normal text
+✨ This is sparkly! ✨
+🌟 This is GLOWING! 🌟</div>
+
+  <p>Use <code class="sp">shine()</code> and <code class="sp">glow()</code> to make your programs look beautiful and highlight important information!</p>
+</div>
+
+<div class="tutorial-section" id="comments">
+  <h2><span class="chapter-num">5</span> Comments</h2>
+  <p>Comments are <strong>notes for humans</strong> — the computer ignores them completely. They help you (and others) understand your code.</p>
+
+  <h3>Inline Comments (one line)</h3>
+  <p>Use <code class="sp">#</code> to start a comment. Everything after <code class="sp">#</code> on that line is ignored:</p>
+<pre><code class="sp"><span class="label">Littlestar</span># This is a comment — the computer ignores this!
+display("Hello")  # This comment is after code</code></pre>
+  <div class="output">Hello</div>
+
+  <h3>Block Comments (multiple lines)</h3>
+  <p>Use <code class="sp">!!</code> to wrap a multi-line comment:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>!!
+This is a block comment.
+It can be as many lines as you want.
+The computer skips all of this.
+!!
+display("I'm the only code that runs!")</code></pre>
+  <div class="output">I'm the only code that runs!</div>
+
+  <div class="box box-tip">
+    <strong>💡 When to Use Comments</strong>
+    <ul style="margin:8px 0 0 16px;">
+      <li>Explain <strong>why</strong> you wrote something (not <em>what</em> — the code shows what)</li>
+      <li>Leave notes for your future self</li>
+      <li>Temporarily disable code without deleting it</li>
+    </ul>
+  </div>
+</div>
+
+<div class="tutorial-section" id="blank-lines">
+  <h2><span class="chapter-num">6</span> Blank Lines (lbr)</h2>
+  <p>Sometimes you want a blank line in your output for better readability. Use <code class="sp">lbr</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>display("Section 1")
+display("Some text here")
+lbr
+display("Section 2")
+display("More text here")</code></pre>
+  <div class="output">Section 1
+Some text here
+
+Section 2
+More text here</div>
+  <p><code class="sp">lbr</code> stands for "line break." It prints an empty line.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 2: VARIABLES
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="what-are-variables">
+  <h2><span class="chapter-num">7</span> What Are Variables?</h2>
+  <p>Imagine you have a <strong>box with a label</strong> on it. You can put something inside the box, and later take it out by reading the label.</p>
+  <p>That's exactly what a <strong>variable</strong> is in programming!</p>
+
+  <table>
+    <tr><th>Real Life</th><th>Programming</th></tr>
+    <tr><td>Box label</td><td>Variable name</td></tr>
+    <tr><td>What's inside</td><td>Variable value</td></tr>
+    <tr><td>Writing on the label</td><td>Declaring a variable</td></tr>
+    <tr><td>Looking inside the box</td><td>Using the variable</td></tr>
+    <tr><td>Replacing the contents</td><td>Updating the variable</td></tr>
+  </table>
+
+  <p>For example:</p>
+  <ul>
+    <li>A box labeled <strong>"name"</strong> might contain <code class="sp">"Alice"</code></li>
+    <li>A box labeled <strong>"age"</strong> might contain <code class="sp">25</code></li>
+    <li>A box labeled <strong>"isStudent"</strong> might contain <code class="sp">yes</code></li>
+  </ul>
+</div>
+
+<div class="tutorial-section" id="declaring-variables">
+  <h2><span class="chapter-num">8</span> Declaring Variables</h2>
+  <p>To create a variable, use the <code class="sp">declare</code> keyword:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare name = "Alice"
+        declare age = 25
+        declare score = 98.5
+        declare isHappy = yes
+
+        display("Name: " + name)
+        display("Age: " + age)
+        display("Score: " + score)
+        display("Happy: " + isHappy)
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">Name: Alice
+Age: 25
+Score: 98.5
+Happy: true</div>
+
+  <h3>Naming Rules</h3>
+  <ul>
+    <li>✅ Use letters, numbers, and underscores: <code class="sp">myName</code>, <code class="sp">score_1</code>, <code class="sp">player2</code></li>
+    <li>✅ Start with a letter: <code class="sp">age</code>, <code class="sp">userName</code></li>
+    <li>❌ Don't start with a number: <code class="sp">2name</code> is wrong!</li>
+    <li>❌ No spaces: <code class="sp">my name</code> is wrong! Use <code class="sp">myName</code></li>
+    <li>❌ Don't use Littlestar keywords: <code class="sp">display</code>, <code class="sp">when</code>, etc.</li>
+  </ul>
+
+  <h3>Good Variable Names</h3>
+  <table>
+    <tr><th>❌ Bad</th><th>✅ Good</th><th>Why</th></tr>
+    <tr><td><code class="sp">x</code></td><td><code class="sp">age</code></td><td>Descriptive name</td></tr>
+    <tr><td><code class="sp">n</code></td><td><code class="sp">name</code></td><td>Clear meaning</td></tr>
+    <tr><td><code class="sp">t</code></td><td><code class="sp">temperature</code></td><td>Self-explanatory</td></tr>
+    <tr><td><code class="sp">a</code></td><td><code class="sp">totalPrice</code></td><td>Tells you what it stores</td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="updating-variables">
+  <h2><span class="chapter-num">9</span> Updating Variables</h2>
+  <p>After declaring a variable, you can change its value using <code class="sp">set</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare score = 0
+        display("Starting score: " + score)
+
+        set score = 10
+        display("After first round: " + score)
+
+        set score = score + 5
+        display("After bonus: " + score)
+
+        set score = score * 2
+        display("After doubling: " + score)
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">Starting score: 0
+After first round: 10
+After bonus: 15
+After doubling: 30</div>
+
+  <div class="box box-danger">
+    <strong>❌ Common Mistake</strong>
+    You MUST <code class="sp">declare</code> a variable before you can <code class="sp">set</code> it!
+<pre style="margin:8px 0 0;background:#1a1a2e;"><code class="sp">set name = "Alice"   # ❌ ERROR: 'name' was never declared!
+declare name = "Alice"  # ✅ CORRECT: declare first
+set name = "Bob"        # ✅ Now you can change it</code></pre>
+  </div>
+
+  <div class="box box-info">
+    <strong>ℹ️ declare vs set</strong>
+    <ul style="margin:8px 0 0 16px;">
+      <li><code class="sp">declare</code> — creates a NEW variable (first time only)</li>
+      <li><code class="sp">set</code> — changes an EXISTING variable (must be declared first)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="tutorial-section" id="constants">
+  <h2><span class="chapter-num">10</span> Constants (fix)</h2>
+  <p>Sometimes you want a variable that <strong>can never be changed</strong>. Use <code class="sp">fix</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>fix TAX_RATE = 0.075
+fix APP_NAME = "My Cool App"
+fix MAX_LIVES = 3
+
+display(APP_NAME)
+display("Tax: " + (TAX_RATE * 100) + "%")
+display("Lives: " + MAX_LIVES)
+
+# This would cause an ERROR:
+# set TAX_RATE = 0.1   ← ❌ Can't change a fixed variable!</code></pre>
+  <div class="output">My Cool App
+Tax: 7.5%
+Lives: 3</div>
+
+  <p>Use <code class="sp">fix</code> for values that should <strong>never change</strong>, like tax rates, app names, or game settings.</p>
+</div>
+
+<div class="tutorial-section" id="deleting-variables">
+  <h2><span class="chapter-num">11</span> Deleting Variables</h2>
+  <p>You can remove a variable entirely using <code class="sp">del</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare temp = 42
+display("temp = " + temp)    # 42
+
+del temp                      # Variable is gone!
+# display(temp)              # ← This would cause an error now!</code></pre>
+
+  <p>This is useful when you want to free up a variable name or clean up after yourself.</p>
+</div>
+
+<div class="tutorial-section" id="swapping">
+  <h2><span class="chapter-num">12</span> Swapping Variables</h2>
+  <p>Want to swap the values of two variables? Use <code class="sp">swap</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare a = "Apple"
+declare b = "Banana"
+display("Before: a=" + a + ", b=" + b)
+
+swap a, b
+display("After:  a=" + a + ", b=" + b)</code></pre>
+  <div class="output">Before: a=Apple, b=Banana
+After:  a=Banana, b=Apple</div>
+
+  <p>Without <code class="sp">swap</code>, you'd need a temporary variable — Littlestar makes it easy!</p>
+</div>
+
+<div class="tutorial-section" id="string-interpolation">
+  <h2><span class="chapter-num">13</span> String Interpolation</h2>
+  <p>Instead of joining strings with <code class="sp">+</code>, you can put variables directly inside text using <code class="sp">{curly braces}</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare name = "Alice"
+declare age = 25
+declare city = "Nairobi"
+
+# Old way (with +):
+display("Hello, " + name + "! You are " + age + " from " + city)
+
+# New way (with {}):
+display("Hello, {name}! You are {age} from {city}")</code></pre>
+  <div class="output">Hello, Alice! You are 25 from Nairobi
+Hello, Alice! You are 25 from Nairobi</div>
+
+  <p>Both lines produce the same output, but <code class="sp">{}</code> is much easier to read!</p>
+
+  <h3>You Can Put Expressions Inside {}</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare price = 49.99
+display("Price: ${price}")
+display("With tax: ${price * 1.075}")
+display("Double: ${price * 2}")</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 3: DATA TYPES
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="numbers">
+  <h2><span class="chapter-num">14</span> Numbers</h2>
+  <p>Numbers in Littlestar are straightforward:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare age = 25           # Whole number (integer)
+declare price = 19.99      # Decimal number (float)
+declare negative = -15     # Negative number
+declare big = 1000000      # Big number
+
+display(age)        # 25
+display(price)      # 19.99
+display(negative)   # -15
+display(big)        # 1000000
+display(comma(big)) # 1,000,000  ← formatted with commas!</code></pre>
+
+  <h3>Math with Numbers</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>display(10 + 3)    # 13  (addition)
+display(10 - 3)    # 7   (subtraction)
+display(10 * 3)    # 30  (multiplication)
+display(10 / 3)    # 3.333... (division)
+display(10 % 3)    # 1   (remainder/modulo)
+display(2 ** 10)   # 1024 (power)</code></pre>
+  <div class="output">13
+7
+30
+3.3333333333333335
+1
+1024</div>
+</div>
+
+<div class="tutorial-section" id="strings">
+  <h2><span class="chapter-num">15</span> Strings (Text)</h2>
+  <p>A <strong>string</strong> is any text wrapped in quotes:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare greeting = "Hello, World!"
+declare name = 'Alice'          # Single quotes work too
+declare emoji = "🌟 Stars! ⭐"
+declare empty = ""              # Empty string (no text)
+
+display(greeting)    # Hello, World!
+display(len(greeting))  # 13 (number of characters)</code></pre>
+
+  <h3>Common String Operations</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare msg = "Hello World"
+
+display(upper(msg))           # HELLO WORLD
+display(lower(msg))           # hello world
+display(capitalize(msg))      # Hello World
+display(reverse(msg))         # dlroW olleH
+display(len(msg))             # 11
+display(wordCount(msg))       # 2
+display(includes(msg, "World"))  # true
+display(replace(msg, "World", "Littlestar"))  # Hello Littlestar</code></pre>
+</div>
+
+<div class="tutorial-section" id="booleans">
+  <h2><span class="chapter-num">16</span> Booleans (yes/no)</h2>
+  <p>A <strong>boolean</strong> is a value that's either <code class="sp">yes</code> (true) or <code class="sp">no</code> (false). That's it — only two options!</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare isRaining = yes
+declare isSunny = no
+
+display(isRaining)    # true
+display(isSunny)      # false
+
+# Booleans are great for conditions:
+when isRaining:
+    display("Bring an umbrella! ☂️")
+otherwise:
+    display("Enjoy the sunshine! ☀️")</code></pre>
+  <div class="output">true
+false
+Bring an umbrella! ☂️</div>
+
+  <h3>Comparisons Create Booleans</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare age = 20
+display(age > 18)     # true (yes)
+display(age < 10)     # false (no)
+display(age == 20)    # true
+display(age != 25)    # true</code></pre>
+</div>
+
+<div class="tutorial-section" id="type-checking">
+  <h2><span class="chapter-num">17</span> Type Checking</h2>
+  <p>You can check what type of data a variable holds:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>display(type("hello"))     # string
+display(type(42))          # number
+display(type(yes))         # boolean
+display(type([1,2,3]))     # array
+
+display(isStr("hello"))    # true
+display(isNum(42))         # true
+display(isBool(yes))       # true
+display(isArr([1,2,3]))    # true</code></pre>
+
+  <h3>Converting Types</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare numStr = "42"
+declare actualNum = toNum(numStr)  # Convert string → number
+display(actualNum + 8)             # 50 (math works now!)
+
+declare num = 100
+declare numAsStr = toStr(num)      # Convert number → string
+display("Score: " + numAsStr)      # Score: 100</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 4: OPERATORS
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="arithmetic">
+  <h2><span class="chapter-num">18</span> Arithmetic Operators</h2>
+  <p>Math in Littlestar works just like math in school:</p>
+
+  <table>
+    <tr><th>Operator</th><th>Name</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="sp">+</code></td><td>Addition</td><td><code class="sp">5 + 3</code></td><td>8</td></tr>
+    <tr><td><code class="sp">-</code></td><td>Subtraction</td><td><code class="sp">10 - 4</code></td><td>6</td></tr>
+    <tr><td><code class="sp">*</code></td><td>Multiplication</td><td><code class="sp">6 * 7</code></td><td>42</td></tr>
+    <tr><td><code class="sp">/</code></td><td>Division</td><td><code class="sp">15 / 4</code></td><td>3.75</td></tr>
+    <tr><td><code class="sp">%</code></td><td>Remainder (Modulo)</td><td><code class="sp">17 % 5</code></td><td>2</td></tr>
+    <tr><td><code class="sp">**</code></td><td>Power (Exponent)</td><td><code class="sp">2 ** 10</code></td><td>1024</td></tr>
+  </table>
+
+  <h3>Order of Operations</h3>
+  <p>Littlestar follows standard math order (PEMDAS/BODMAS):</p>
+<pre><code class="sp"><span class="label">Littlestar</span>display(2 + 3 * 4)       # 14 (multiplication first)
+display((2 + 3) * 4)     # 20 (parentheses first)
+display(10 - 2 ** 3)     # 2  (power first: 2³=8, then 10-8=2)</code></pre>
+</div>
+
+<div class="tutorial-section" id="comparison">
+  <h2><span class="chapter-num">19</span> Comparison Operators</h2>
+  <p>Comparison operators <strong>compare two values</strong> and give you <code class="sp">yes</code> or <code class="sp">no</code>:</p>
+
+  <table>
+    <tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="sp">==</code></td><td>Equal to</td><td><code class="sp">5 == 5</code></td><td>true</td></tr>
+    <tr><td><code class="sp">!=</code> or <code class="sp">&lt;&gt;</code></td><td>Not equal</td><td><code class="sp">5 != 3</code></td><td>true</td></tr>
+    <tr><td><code class="sp">&gt;</code></td><td>Greater than</td><td><code class="sp">10 &gt; 5</code></td><td>true</td></tr>
+    <tr><td><code class="sp">&lt;</code></td><td>Less than</td><td><code class="sp">3 &lt; 7</code></td><td>true</td></tr>
+    <tr><td><code class="sp">&gt;=</code></td><td>Greater or equal</td><td><code class="sp">5 &gt;= 5</code></td><td>true</td></tr>
+    <tr><td><code class="sp">&lt;=</code></td><td>Less or equal</td><td><code class="sp">4 &lt;= 3</code></td><td>false</td></tr>
+  </table>
+
+  <div class="box box-warn">
+    <strong>⚠️ Common Mistake: = vs ==</strong>
+    <ul style="margin:8px 0 0 16px;">
+      <li><code class="sp">=</code> means "assign a value" → <code class="sp">declare x = 5</code></li>
+      <li><code class="sp">==</code> means "is equal to?" → <code class="sp">when x == 5:</code></li>
+    </ul>
+    Don't mix them up!
+  </div>
+</div>
+
+<div class="tutorial-section" id="logical">
+  <h2><span class="chapter-num">20</span> Logical Operators (and/or/not)</h2>
+  <p>Combine conditions with <code class="sp">and</code>, <code class="sp">or</code>, and <code class="sp">not</code>:</p>
+
+  <table>
+    <tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td><code class="sp">and</code></td><td>Both must be true</td><td><code class="sp">age &gt; 18 and hasLicense</code></td></tr>
+    <tr><td><code class="sp">or</code></td><td>At least one true</td><td><code class="sp">isVIP or hasTicket</code></td></tr>
+    <tr><td><code class="sp">not</code></td><td>Flip true/false</td><td><code class="sp">not isBlocked</code></td></tr>
+  </table>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare age = 25
+declare hasID = yes
+
+when age >= 18 and hasID:
+    display("✅ You can enter!")
+otherwise:
+    display("❌ Access denied")
+
+when age < 13 or age > 65:
+    display("You get a discount!")
+otherwise:
+    display("Regular price")</code></pre>
+  <div class="output">✅ You can enter!
+Regular price</div>
+</div>
+
+<div class="tutorial-section" id="string-joining">
+  <h2><span class="chapter-num">21</span> String Joining (Concatenation)</h2>
+  <p>Use <code class="sp">+</code> to join text strings together:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare first = "Little"
+declare last = "star"
+display(first + last)          # Littlestar
+display(first + " " + last)   # Little star
+
+# Joining text with numbers:
+declare age = 25
+display("I am " + age + " years old")   # I am 25 years old
+
+# Or use string interpolation:
+display("I am {age} years old")          # I am 25 years old</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 5: DECISIONS
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="when">
+  <h2><span class="chapter-num">22</span> Making Decisions with <code class="sp">when</code></h2>
+  <p>In real life, you make decisions constantly: <em>"If it's raining, take an umbrella."</em></p>
+  <p>In Littlestar, you use <code class="sp">when</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare temperature = 35
+
+when temperature > 30:
+    display("🔥 It's hot! Drink water!")
+
+when temperature < 10:
+    display("🥶 It's cold! Wear a coat!")</code></pre>
+  <div class="output">🔥 It's hot! Drink water!</div>
+
+  <p>The code inside <code class="sp">when</code> only runs if the condition is <strong>true</strong>.</p>
+
+  <div class="box box-info">
+    <strong>ℹ️ How to Read It</strong>
+    <code class="sp">when temperature > 30:</code> means <em>"When the temperature is greater than 30, do this..."</em>
+  </div>
+</div>
+
+<div class="tutorial-section" id="elif">
+  <h2><span class="chapter-num">23</span> Multiple Choices with <code class="sp">elif</code></h2>
+  <p>When you have more than two options, use <code class="sp">elif</code> (short for "else if"):</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare score = 85
+
+        when score >= 90:
+            display("🏆 Grade: A — Excellent!")
+        elif score >= 80:
+            display("🌟 Grade: B — Great job!")
+        elif score >= 70:
+            display("👍 Grade: C — Good")
+        elif score >= 60:
+            display("📝 Grade: D — Needs improvement")
+        otherwise:
+            display("❌ Grade: F — Failed")
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">🌟 Grade: B — Great job!</div>
+
+  <p>Littlestar checks each condition from top to bottom. It runs the <strong>first one</strong> that's true, then skips the rest.</p>
+</div>
+
+<div class="tutorial-section" id="otherwise">
+  <h2><span class="chapter-num">24</span> Default Action with <code class="sp">otherwise</code></h2>
+  <p><code class="sp">otherwise</code> runs when <strong>none</strong> of the <code class="sp">when</code>/<code class="sp">elif</code> conditions are true:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare day = "Saturday"
+
+when day == "Monday":
+    display("Start of the week 😴")
+elif day == "Friday":
+    display("TGIF! 🎉")
+elif day == "Saturday" or day == "Sunday":
+    display("Weekend! 🎊")
+otherwise:
+    display("Regular day 📝")</code></pre>
+  <div class="output">Weekend! 🎊</div>
+</div>
+
+<div class="tutorial-section" id="nested-conditions">
+  <h2><span class="chapter-num">25</span> Nested Conditions</h2>
+  <p>You can put conditions inside other conditions:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare age = 25
+declare hasLicense = yes
+
+when age >= 18:
+    display("You are an adult")
+    when hasLicense:
+        display("✅ You can drive!")
+    otherwise:
+        display("❌ Get a license first!")
+otherwise:
+    display("You're too young to drive")</code></pre>
+  <div class="output">You are an adult
+✅ You can drive!</div>
+</div>
+
+<div class="tutorial-section" id="match-case">
+  <h2><span class="chapter-num">26</span> match/case (Switch)</h2>
+  <p>When you're comparing one value against many options, <code class="sp">match</code> is cleaner:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare fruit = "apple"
+
+match fruit:
+    case "apple":
+        display("🍎 Red and crunchy!")
+    case "banana":
+        display("🍌 Yellow and sweet!")
+    case "cherry", "strawberry":
+        display("🍒 Small and red!")
+    default:
+        display("🤷 I don't know that fruit")</code></pre>
+  <div class="output">🍎 Red and crunchy!</div>
+</div>
+
+<div class="tutorial-section" id="contains-keyword">
+  <h2><span class="chapter-num">27</span> The <code class="sp">contains</code> Keyword</h2>
+  <p>Check if an array contains a value, or if a string contains text:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        # Arrays
+        letarr fruits = "apple", "banana", "cherry"
+        when fruits contains "banana":
+            display("✅ We have bananas!")
+
+        # Strings
+        declare message = "Hello World"
+        when message contains "World":
+            display("✅ Message contains 'World'!")
+
+        when message contains "Python":
+            display("Found Python")
+        otherwise:
+            display("❌ No Python here — this is Littlestar!")
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">✅ We have bananas!
+✅ Message contains 'World'!
+❌ No Python here — this is Littlestar!</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 6: LOOPS
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="while-loops">
+  <h2><span class="chapter-num">28</span> Loops — Repeating Things</h2>
+  <p>Imagine writing "I will not talk in class" 100 times. Would you write it by hand? Of course not — you'd use a <strong>loop</strong>!</p>
+  <p>A <code class="sp">while</code> loop repeats code as long as a condition is true:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare i = 1
+        while i <= 5:
+            display("Line " + i)
+            set i = i + 1
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">Line 1
+Line 2
+Line 3
+Line 4
+Line 5</div>
+
+  <h3>How It Works (Step by Step)</h3>
+  <ol>
+    <li><code class="sp">declare i = 1</code> → Start at 1</li>
+    <li><code class="sp">while i <= 5:</code> → Is 1 ≤ 5? YES → run the body</li>
+    <li><code class="sp">display("Line " + i)</code> → Print "Line 1"</li>
+    <li><code class="sp">set i = i + 1</code> → i becomes 2</li>
+    <li>Go back to step 2. Is 2 ≤ 5? YES → print "Line 2"</li>
+    <li>...continues until i becomes 6</li>
+    <li>Is 6 ≤ 5? NO → loop stops</li>
+  </ol>
+
+  <div class="box box-danger">
+    <strong>❌ Infinite Loop Warning!</strong>
+    If you forget <code class="sp">set i = i + 1</code>, the loop runs FOREVER because <code class="sp">i</code> stays at 1 and <code class="sp">1 &lt;= 5</code> is always true. Littlestar protects you by stopping after 10,000 iterations.
+  </div>
+</div>
+
+<div class="tutorial-section" id="counting-loops">
+  <h2><span class="chapter-num">29</span> Counting Patterns</h2>
+
+  <h3>Count Up</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 1
+while i <= 10:
+    display(i)
+    set i = i + 1</code></pre>
+
+  <h3>Count Down</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 10
+while i >= 1:
+    display(i + "...")
+    set i = i - 1
+display("🚀 Blast off!")</code></pre>
+  <div class="output">10...
+9...
+8...
+7...
+6...
+5...
+4...
+3...
+2...
+1...
+🚀 Blast off!</div>
+
+  <h3>Count by Twos</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 0
+while i <= 20:
+    display(i)
+    set i = i + 2</code></pre>
+</div>
+
+<div class="tutorial-section" id="stop-break">
+  <h2><span class="chapter-num">30</span> Stopping Early with <code class="sp">stop</code></h2>
+  <p><code class="sp">stop</code> immediately exits the loop (like hitting the emergency brake):</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 1
+while i <= 100:
+    when i == 5:
+        display("Found 5! Stopping here.")
+        stop
+    display("Checking: " + i)
+    set i = i + 1</code></pre>
+  <div class="output">Checking: 1
+Checking: 2
+Checking: 3
+Checking: 4
+Found 5! Stopping here.</div>
+</div>
+
+<div class="tutorial-section" id="skip-continue">
+  <h2><span class="chapter-num">31</span> Skipping with <code class="sp">skip</code></h2>
+  <p><code class="sp">skip</code> skips the rest of the current iteration and moves to the next one:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 0
+while i < 10:
+    set i = i + 1           # ← IMPORTANT: increment BEFORE skip!
+    when i == 3 or i == 7:
+        skip                # ← Skip 3 and 7
+    display(i)</code></pre>
+  <div class="output">1
+2
+4
+5
+6
+8
+9
+10</div>
+
+  <div class="box box-warn">
+    <strong>⚠️ Critical Rule for <code class="sp">skip</code></strong>
+    Always put <code class="sp">set i = i + 1</code> <strong>BEFORE</strong> the <code class="sp">skip</code> statement! Otherwise the loop will hang because <code class="sp">i</code> never changes.
+<pre style="margin:8px 0 0;background:#1a1a2e;"><code class="sp"># ❌ WRONG (will hang!):
+while i <= 5:
+    when i == 3:
+        skip
+    set i = i + 1    # Never reached when i==3!
+
+# ✅ RIGHT:
+while i < 5:
+    set i = i + 1    # Always runs!
+    when i == 3:
+        skip</code></pre>
+  </div>
+</div>
+
+<div class="tutorial-section" id="loop-patterns">
+  <h2><span class="chapter-num">32</span> Loop Patterns</h2>
+
+  <h3>Multiplication Table</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare num = 7
+declare i = 1
+display("=== " + num + " Times Table ===")
+while i <= 12:
+    display(num + " × " + i + " = " + (num * i))
+    set i = i + 1</code></pre>
+
+  <h3>Star Pattern</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 1
+while i <= 5:
+    display(repeat("★ ", i))
+    set i = i + 1</code></pre>
+  <div class="output">★ 
+★ ★ 
+★ ★ ★ 
+★ ★ ★ ★ 
+★ ★ ★ ★ ★ </div>
+
+  <h3>FizzBuzz (Classic Programming Challenge)</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>declare i = 1
+while i <= 20:
+    when i % 15 == 0:
+        display("FizzBuzz")
+    elif i % 3 == 0:
+        display("Fizz")
+    elif i % 5 == 0:
+        display("Buzz")
+    otherwise:
+        display(i)
+    set i = i + 1</code></pre>
+</div>
+
+<div class="tutorial-section" id="repeat-this">
+  <h2><span class="chapter-num">33</span> repeat this (Run Once)</h2>
+  <p><code class="sp">repeat this:</code> runs a block of code exactly once. Useful for grouping statements:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>repeat this:
+    display("Setting up...")
+    declare x = 10
+    declare y = 20
+    display("x + y = " + (x + y))</code></pre>
+  <div class="output">Setting up...
+x + y = 30</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 7: ARRAYS
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="what-are-arrays">
+  <h2><span class="chapter-num">34</span> What Are Arrays?</h2>
+  <p>An <strong>array</strong> is a list of items. Think of it like a numbered shopping list:</p>
+
+  <table>
+    <tr><th>Position</th><th>Item</th></tr>
+    <tr><td>0</td><td>Apples</td></tr>
+    <tr><td>1</td><td>Bananas</td></tr>
+    <tr><td>2</td><td>Milk</td></tr>
+    <tr><td>3</td><td>Bread</td></tr>
+  </table>
+
+  <div class="box box-info">
+    <strong>ℹ️ Counting Starts at 0!</strong>
+    In programming, we count from <strong>0</strong>, not 1. So the first item is at position 0, the second at position 1, etc. This is called <strong>zero-indexing</strong>.
+  </div>
+</div>
+
+<div class="tutorial-section" id="creating-arrays">
+  <h2><span class="chapter-num">35</span> Creating Arrays</h2>
+  <p>Use <code class="sp">letarr</code> to create an array:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        letarr fruits = "Apple", "Banana", "Cherry", "Date"
+        letarr numbers = 10, 20, 30, 40, 50
+        letarr mixed = "hello", 42, yes
+
+        display("Fruits: " + fruits)
+        display("Numbers: " + numbers)
+        display("Mixed: " + mixed)
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">Fruits: Apple, Banana, Cherry, Date
+Numbers: 10, 20, 30, 40, 50
+Mixed: hello, 42, true</div>
+
+  <div class="box box-tip">
+    <strong>💡 letarr vs declare</strong>
+    <ul style="margin:8px 0 0 16px;">
+      <li><code class="sp">declare</code> — for single values (strings, numbers, booleans)</li>
+      <li><code class="sp">letarr</code> — for arrays (lists of values)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="tutorial-section" id="accessing-elements">
+  <h2><span class="chapter-num">36</span> Accessing Array Elements</h2>
+  <p>Use square brackets <code class="sp">[index]</code> to get a specific item:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>letarr colors = "Red", "Green", "Blue", "Yellow"
+
+display(colors[0])    # Red    (first item)
+display(colors[1])    # Green  (second item)
+display(colors[2])    # Blue   (third item)
+display(colors[3])    # Yellow (fourth item)
+
+# Special functions:
+display(first(colors))   # Red (first item)
+display(last(colors))    # Yellow (last item)
+display(len(colors))     # 4 (total items)</code></pre>
+</div>
+
+<div class="tutorial-section" id="modifying-arrays">
+  <h2><span class="chapter-num">37</span> Modifying Arrays</h2>
+
+  <table>
+    <tr><th>Function</th><th>What It Does</th><th>Example</th></tr>
+    <tr><td><code class="sp">add(arr, item)</code></td><td>Add to end</td><td><code class="sp">add(fruits, "Mango")</code></td></tr>
+    <tr><td><code class="sp">addFirst(arr, item)</code></td><td>Add to beginning</td><td><code class="sp">addFirst(fruits, "Kiwi")</code></td></tr>
+    <tr><td><code class="sp">remove(arr)</code></td><td>Remove last item</td><td><code class="sp">remove(fruits)</code></td></tr>
+    <tr><td><code class="sp">removeFirst(arr)</code></td><td>Remove first item</td><td><code class="sp">removeFirst(fruits)</code></td></tr>
+    <tr><td><code class="sp">removeItem(arr, item)</code></td><td>Remove specific item</td><td><code class="sp">removeItem(fruits, "Banana")</code></td></tr>
+  </table>
+
+<pre><code class="sp"><span class="label">Littlestar</span>letarr todos = "Buy milk", "Exercise"
+display("Before: " + todos)
+
+add(todos, "Study")
+display("After add: " + todos)
+
+removeFirst(todos)
+display("After removeFirst: " + todos)</code></pre>
+  <div class="output">Before: Buy milk, Exercise
+After add: Buy milk, Exercise, Study
+After removeFirst: Exercise, Study</div>
+</div>
+
+<div class="tutorial-section" id="array-math">
+  <h2><span class="chapter-num">38</span> Array Math</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>letarr scores = 85, 92, 78, 95, 88, 76, 91
+
+display("Scores: " + scores)
+display("Sum: " + sum(scores))
+display("Average: " + decimals(avg(scores), 2))
+display("Min: " + min(scores))
+display("Max: " + max(scores))
+display("Median: " + median(scores))
+display("Std Dev: " + decimals(stddev(scores), 2))
+display("Range: " + range(scores))</code></pre>
+  <div class="output">Scores: 85, 92, 78, 95, 88, 76, 91
+Sum: 605
+Average: 86.43
+Min: 76
+Max: 95
+Median: 88
+Std Dev: 6.58
+Range: 19</div>
+</div>
+
+<div class="tutorial-section" id="looping-arrays">
+  <h2><span class="chapter-num">39</span> Looping Through Arrays</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>letarr names = "Alice", "Bob", "Charlie", "Diana"
+
+declare i = 0
+while i < len(names):
+    display("Hello, " + names[i] + "!")
+    set i = i + 1</code></pre>
+  <div class="output">Hello, Alice!
+Hello, Bob!
+Hello, Charlie!
+Hello, Diana!</div>
+</div>
+
+<div class="tutorial-section" id="array-searching">
+  <h2><span class="chapter-num">40</span> Searching Arrays</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>letarr animals = "cat", "dog", "fish", "bird", "dog"
+
+display(contains(animals, "dog"))     # true
+display(contains(animals, "snake"))   # false
+display(indexOf(animals, "fish"))     # 2
+display(count(animals, "dog"))        # 2</code></pre>
+</div>
+
+<div class="tutorial-section" id="array-sorting">
+  <h2><span class="chapter-num">41</span> Sorting Arrays</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>letarr nums = 42, 15, 8, 23, 4, 16
+
+display("Original: " + nums)
+display("Sorted ↑: " + sort(nums))
+display("Sorted ↓: " + dsort(nums))
+display("Reversed: " + reverse(nums))
+display("Unique: " + unique(nums))</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 8: FUNCTIONS
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="what-are-functions">
+  <h2><span class="chapter-num">42</span> What Are Functions?</h2>
+  <p>A <strong>function</strong> is a reusable block of code. Think of it like a recipe — you write it once, then use it whenever you need it.</p>
+  <p>Instead of writing the same code 10 times, you put it in a function and <strong>call</strong> it 10 times!</p>
+</div>
+
+<div class="tutorial-section" id="creating-functions">
+  <h2><span class="chapter-num">43</span> Creating Functions</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        func greet(name):
+            display("👋 Hello, " + name + "!")
+            display("Welcome to Littlestar!")
+
+        # Call the function 3 times:
+        greet("Alice")
+        greet("Bob")
+        greet("Charlie")
+
+    spark print:
+        main(1)</code></pre>
+  <div class="output">👋 Hello, Alice!
+Welcome to Littlestar!
+👋 Hello, Bob!
+Welcome to Littlestar!
+👋 Hello, Charlie!
+Welcome to Littlestar!</div>
+</div>
+
+<div class="tutorial-section" id="parameters">
+  <h2><span class="chapter-num">44</span> Parameters (Inputs)</h2>
+  <p>Parameters let you pass data INTO a function:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>func introduce(name, age, city):
+    display("{name} is {age} years old from {city}")
+
+introduce("Alice", 25, "Lagos")
+introduce("Bob", 30, "Nairobi")
+introduce("Charlie", 22, "London")</code></pre>
+  <div class="output">Alice is 25 years old from Lagos
+Bob is 30 years old from Nairobi
+Charlie is 22 years old from London</div>
+</div>
+
+<div class="tutorial-section" id="return-values">
+  <h2><span class="chapter-num">45</span> Return Values</h2>
+  <p>Functions can send a value BACK using <code class="sp">return</code>:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>func add(a, b):
+    return a + b
+
+func multiply(a, b):
+    return a * b
+
+declare result1 = add(5, 3)
+declare result2 = multiply(4, 7)
+
+display("5 + 3 = " + result1)
+display("4 × 7 = " + result2)
+display("Combined: " + add(result1, result2))</code></pre>
+  <div class="output">5 + 3 = 8
+4 × 7 = 28
+Combined: 36</div>
+</div>
+
+<div class="tutorial-section" id="private-functions">
+  <h2><span class="chapter-num">46</span> Private Functions</h2>
+  <p>Use <code class="sp">private func</code> to create functions that can't be accessed from outside:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>private func secret():
+    display("🔒 This is private!")
+
+func publicGreet():
+    display("Hello!")
+    secret()     # Can call private from here
+
+publicGreet()</code></pre>
+</div>
+
+<div class="tutorial-section" id="export-import">
+  <h2><span class="chapter-num">47</span> Export & Import</h2>
+  <p>Share functions between files!</p>
+
+  <h4>File: helpers.lstar</h4>
+<pre><code class="sp"><span class="label">helpers.lstar</span>module littlestar:
+    export func double(n):
+        return n * 2
+
+    export func triple(n):
+        return n * 3</code></pre>
+
+  <h4>File: main.lstar</h4>
+<pre><code class="sp"><span class="label">main.lstar</span>module littlestar:
+
+    spark main(1):
+        import helpers
+        display(double(21))     # 42
+        display(triple(10))     # 30
+
+    spark print:
+        main(1)</code></pre>
+
+  <div class="box box-info">
+    <strong>ℹ️ How Imports Work</strong>
+    Both files must be open as tabs in Littlestar Studio. The imported file needs <code class="sp">export func</code> definitions.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHAPTER 9–19: REMAINING TOPICS (shorter sections)
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="basic-math">
+  <h2><span class="chapter-num">48</span> Math Functions</h2>
+  <table>
+    <tr><th>Function</th><th>Description</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="sp">sqrt(x)</code></td><td>Square root</td><td><code class="sp">sqrt(144)</code></td><td>12</td></tr>
+    <tr><td><code class="sp">square(x)</code></td><td>x²</td><td><code class="sp">square(7)</code></td><td>49</td></tr>
+    <tr><td><code class="sp">cube(x)</code></td><td>x³</td><td><code class="sp">cube(3)</code></td><td>27</td></tr>
+    <tr><td><code class="sp">pow(x, n)</code></td><td>x to the power n</td><td><code class="sp">pow(2, 10)</code></td><td>1024</td></tr>
+    <tr><td><code class="sp">abs(x)</code></td><td>Absolute value</td><td><code class="sp">abs(-42)</code></td><td>42</td></tr>
+    <tr><td><code class="sp">factorial(n)</code></td><td>n!</td><td><code class="sp">factorial(5)</code></td><td>120</td></tr>
+    <tr><td><code class="sp">fibonacci(n)</code></td><td>nth Fibonacci</td><td><code class="sp">fibonacci(10)</code></td><td>55</td></tr>
+    <tr><td><code class="sp">isPrime(n)</code></td><td>Is prime?</td><td><code class="sp">isPrime(17)</code></td><td>true</td></tr>
+    <tr><td><code class="sp">gcd(a, b)</code></td><td>Greatest common divisor</td><td><code class="sp">gcd(12, 8)</code></td><td>4</td></tr>
+    <tr><td><code class="sp">lcm(a, b)</code></td><td>Least common multiple</td><td><code class="sp">lcm(4, 6)</code></td><td>12</td></tr>
+    <tr><td><code class="sp">distance(x1,y1,x2,y2)</code></td><td>Distance between points</td><td><code class="sp">distance(0,0,3,4)</code></td><td>5</td></tr>
+    <tr><td><code class="sp">quadratic(a,b,c)</code></td><td>Solve ax²+bx+c=0</td><td><code class="sp">quadratic(1,-5,6)</code></td><td>[3, 2]</td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="rounding">
+  <h2><span class="chapter-num">49</span> Rounding & Formatting</h2>
+  <table>
+    <tr><th>Function</th><th>Description</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="sp">round(n, d)</code></td><td>Round to d decimals</td><td><code class="sp">round(3.14159, 2)</code></td><td>3.14</td></tr>
+    <tr><td><code class="sp">decimals(n, d)</code></td><td>Format with d decimals</td><td><code class="sp">decimals(10, 2)</code></td><td>10.00</td></tr>
+    <tr><td><code class="sp">floor(n)</code></td><td>Round down</td><td><code class="sp">floor(3.9)</code></td><td>3</td></tr>
+    <tr><td><code class="sp">ceil(n)</code></td><td>Round up</td><td><code class="sp">ceil(3.1)</code></td><td>4</td></tr>
+  </table>
+  <p><strong>Key difference:</strong> <code class="sp">round(10, 2)</code> gives <code class="sp">10</code> but <code class="sp">decimals(10, 2)</code> gives <code class="sp">10.00</code></p>
+</div>
+
+<div class="tutorial-section" id="comma-formatting">
+  <h2><span class="chapter-num">50</span> Comma Formatting</h2>
+  <p>Use <code class="sp">comma()</code> to format large numbers with commas:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>display(comma(1234567))          # 1,234,567
+display(comma(9876543.21))       # 9,876,543.21
+display("$" + comma(1000000))    # $1,000,000</code></pre>
+</div>
+
+<div class="tutorial-section" id="advanced-math">
+  <h2><span class="chapter-num">51</span> Even/Odd Functions</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display(isEven(4))     # true
+display(isOdd(7))      # true
+display(evens(5))      # 2, 4, 6, 8, 10  (first 5 even numbers)
+display(odds(5))       # 1, 3, 5, 7, 9   (first 5 odd numbers)
+display(evensBetween(10, 20))  # 10, 12, 14, 16, 18, 20
+display(oddsBetween(10, 20))   # 11, 13, 15, 17, 19</code></pre>
+</div>
+
+<div class="tutorial-section" id="trigonometry">
+  <h2><span class="chapter-num">52</span> Trigonometry</h2>
+  <p>All trig functions use <strong>degrees</strong> by default:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>display(sin(90))       # 1
+display(cos(0))        # 1
+display(tan(45))       # ~1
+display(asin(1))       # 90
+display(degrad(180))   # 3.14159... (degrees → radians)</code></pre>
+</div>
+
+<div class="tutorial-section" id="statistics">
+  <h2><span class="chapter-num">53</span> Statistics</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>letarr data = 85, 92, 78, 95, 88, 76, 91
+
+display("Sum: " + sum(data))
+display("Average: " + decimals(avg(data), 2))
+display("Median: " + median(data))
+display("Mode: " + mode(data))
+display("Variance: " + decimals(variance(data), 2))
+display("Std Dev: " + decimals(stddev(data), 2))
+display("Range: " + range(data))</code></pre>
+</div>
+
+<div class="tutorial-section" id="number-systems">
+  <h2><span class="chapter-num">54</span> Number Systems</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>declare n = 255
+display("Decimal: " + n)
+display("Binary:  " + bin(n))     # 11111111
+display("Octal:   " + oct(n))     # 377
+display("Hex:     " + hex(n))     # FF</code></pre>
+</div>
+
+<div class="tutorial-section" id="fractions">
+  <h2><span class="chapter-num">55</span> Fractions</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display(fraction(0.75))           # 3/4
+display(fraction(0.333))          # 333/1000
+display(properFraction(2.75))     # 2 3/4
+display(improperFraction(1.5))    # 3/2</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="string-case">
+  <h2><span class="chapter-num">56</span> String Case Functions</h2>
+  <table>
+    <tr><th>Function</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="sp">upper(s)</code></td><td><code class="sp">upper("hello")</code></td><td>"HELLO"</td></tr>
+    <tr><td><code class="sp">lower(s)</code></td><td><code class="sp">lower("HELLO")</code></td><td>"hello"</td></tr>
+    <tr><td><code class="sp">capitalize(s)</code></td><td><code class="sp">capitalize("hello world")</code></td><td>"Hello World"</td></tr>
+    <tr><td><code class="sp">sentence(s)</code></td><td><code class="sp">sentence("hello world")</code></td><td>"Hello world"</td></tr>
+    <tr><td><code class="sp">toggle(s)</code></td><td><code class="sp">toggle("Hello")</code></td><td>"hELLO"</td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="string-search">
+  <h2><span class="chapter-num">57</span> Searching Strings</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>declare msg = "Hello World"
+display(includes(msg, "World"))    # true
+display(startsWith(msg, "Hello"))  # true
+display(endsWith(msg, "World"))    # true
+display(charAt(msg, 0))           # H
+display(indexOf(msg, "W"))        # 6</code></pre>
+</div>
+
+<div class="tutorial-section" id="string-modify">
+  <h2><span class="chapter-num">58</span> Modifying Strings</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display(replace("Hello World", "World", "Littlestar"))  # Hello Littlestar
+display(reverse("Hello"))           # olleH
+display(repeat("Ha", 3))            # HaHaHa
+display(trim("  hello  "))          # hello
+display(split("a,b,c", ","))        # a, b, c
+display(padLeft("5", 3, "0"))       # 005
+display(padRight("Hi", 5, "."))     # Hi...</code></pre>
+</div>
+
+<div class="tutorial-section" id="string-info">
+  <h2><span class="chapter-num">59</span> String Information</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>declare text = "The quick brown fox"
+display(len(text))         # 19
+display(wordCount(text))   # 4</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="area">
+  <h2><span class="chapter-num">60</span> Geometry — Area</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display("Circle (r=5): " + decimals(area(circle, 5), 2))
+display("Square (s=4): " + area(square, 4))
+display("Rectangle (4×6): " + area(rectangle, 4, 6))
+display("Triangle (b=3,h=4): " + area(triangle, 3, 4))</code></pre>
+  <div class="output">Circle (r=5): 78.54
+Square (s=4): 16
+Rectangle (4×6): 24
+Triangle (b=3,h=4): 6</div>
+  <p>Available shapes: circle, square, rectangle, triangle, trapezoid, parallelogram, rhombus, ellipse, pentagon, hexagon</p>
+</div>
+
+<div class="tutorial-section" id="perimeter">
+  <h2><span class="chapter-num">61</span> Geometry — Perimeter</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display("Circle (r=5): " + decimals(perimeter(circle, 5), 2))
+display("Square (s=4): " + perimeter(square, 4))
+display("Rectangle (4×6): " + perimeter(rectangle, 4, 6))</code></pre>
+</div>
+
+<div class="tutorial-section" id="volume">
+  <h2><span class="chapter-num">62</span> Geometry — Volume</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display("Sphere (r=3): " + decimals(volume(sphere, 3), 2))
+display("Cube (s=4): " + volume(cube, 4))
+display("Cylinder (r=2,h=5): " + decimals(volume(cylinder, 2, 5), 2))</code></pre>
+  <p>Available shapes: cube, sphere, cylinder, cone, pyramid, cuboid, prism, hemisphere, ellipsoid</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="currency">
+  <h2><span class="chapter-num">63</span> Currency Conversion (Live!)</h2>
+  <p>Littlestar fetches <strong>real-time exchange rates</strong> from the internet!</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare amount = 100
+        display("💱 $" + amount + " USD = ...")
+        display("EUR: " + decimals(convertCurrency(amount, USD, EUR), 2))
+        display("GBP: " + decimals(convertCurrency(amount, USD, GBP), 2))
+        display("JPY: " + comma(decimals(convertCurrency(amount, USD, JPY), 0)))
+        display("NGN: " + comma(decimals(convertCurrency(amount, USD, NGN), 2)))
+
+    spark print:
+        main(1)</code></pre>
+  <p>Supports 128 currencies including USD, EUR, GBP, JPY, NGN, ZAR, INR, BRL, CAD, AUD, and many more!</p>
+</div>
+
+<div class="tutorial-section" id="units">
+  <h2><span class="chapter-num">64</span> Unit Conversion</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display("5 miles = " + decimals(convert(5, mile, meter), 0) + " meters")
+display("150 lb = " + decimals(convert(150, lb, kg), 2) + " kg")
+display("2 hours = " + convert(2, hour, min) + " minutes")
+display("1 GB = " + convert(1, GB, MB) + " MB")</code></pre>
+  <p>Categories: length, mass, time, data, volume, speed, angle (44 units total)</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="tohtml-tocss">
+  <h2><span class="chapter-num">65</span> Web Output — toHtml / toCss</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        toCss("body { background: #0f0f1e; color: white; padding: 40px; font-family: sans-serif; text-align: center; }")
+        toCss("h1 { color: #F5A623; }")
+        toHtml("<h1>🌟 Hello from Littlestar!</h1>")
+        toHtml("<p>This was built with code!</p>")
+
+    spark print:
+        main(1)</code></pre>
+  <p>Click the <strong>"Web"</strong> tab in the output panel to see the rendered page!</p>
+</div>
+
+<div class="tutorial-section" id="web-block">
+  <h2><span class="chapter-num">66</span> web: Block (Complete HTML5)</h2>
+  <p>Write complete HTML5 pages directly in Littlestar:</p>
+
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare title = "My Page"
+        declare color = "#F5A623"
+
+        web:
+            &lt;!DOCTYPE html&gt;
+            &lt;html lang="en"&gt;
+            &lt;head&gt;
+                &lt;meta charset="UTF-8"&gt;
+                &lt;title&gt;{title}&lt;/title&gt;
+                &lt;style&gt;
+                    body { background: #0f0f1e; color: white; text-align: center; padding: 40px; }
+                    h1 { color: {color}; }
+                &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;h1&gt;🌟 Welcome!&lt;/h1&gt;
+                &lt;p&gt;Built with Littlestar&lt;/p&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+
+    spark print:
+        main(1)</code></pre>
+
+  <div class="box box-info">
+    <strong>ℹ️ Variables work inside web: blocks!</strong>
+    Use <code class="sp">{variableName}</code> to insert Littlestar variables into your HTML.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="text-input">
+  <h2><span class="chapter-num">67</span> Getting User Input</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>declare name = input("What is your name?")
+display("Hello, " + name + "!")
+
+declare age = readNum("How old are you?")
+display("In 10 years you'll be " + (age + 10))</code></pre>
+
+  <table>
+    <tr><th>Function</th><th>Returns</th><th>Use Case</th></tr>
+    <tr><td><code class="sp">input("prompt")</code></td><td>String</td><td>General text</td></tr>
+    <tr><td><code class="sp">readNum("prompt")</code></td><td>Number</td><td>Numbers only</td></tr>
+    <tr><td><code class="sp">readPassword("prompt")</code></td><td>String</td><td>Hidden text</td></tr>
+    <tr><td><code class="sp">confirm("prompt")</code></td><td>Boolean</td><td>Yes/No questions</td></tr>
+    <tr><td><code class="sp">alert("message")</code></td><td>—</td><td>Show a popup</td></tr>
+  </table>
+</div>
+
+<div id="number-input"></div>
+<div id="password-input"></div>
+<div id="confirm-alert"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="creating-db">
+  <h2><span class="chapter-num">68</span> Databases</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestardb:
+    createdb students:
+        Student1:
+            name: "Alice",
+            age: 20,
+            grade: "A"
+        Student2:
+            name: "Bob",
+            age: 22,
+            grade: "B"
+
+module littlestar:
+    spark main(1):
+        letarr data = fetch(students)
+        display(data)
+        display("Count: " + countdb("students"))
+
+    spark print:
+        main(1)</code></pre>
+</div>
+
+<div id="querying-db"></div>
+<div id="db-functions"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="write-read">
+  <h2><span class="chapter-num">69</span> File I/O</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>write("notes.txt", "Hello!")           # Create/overwrite file
+append("notes.txt", " World!")          # Add to end
+declare content = read("notes.txt")    # Read file
+display(content)                        # Hello! World!
+display(exists("notes.txt"))           # true
+delete file notes.txt                  # Remove file
+display(exists("notes.txt"))           # false</code></pre>
+
+  <div class="box box-warn">
+    <strong>⚠️ Files are stored in browser memory (localStorage)</strong>
+    They will be deleted if you clear browser data. Use <code class="sp">exportfile</code> (creator mode) to download files.
+  </div>
+</div>
+
+<div id="append-exists"></div>
+<div id="export-delete"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="creating-objects">
+  <h2><span class="chapter-num">70</span> Objects</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>letobj person:
+    name: "Alice",
+    age: 25,
+    city: "Lagos"
+
+display(person)
+display(person.name)    # Alice
+display(person.age)     # 25</code></pre>
+</div>
+
+<div id="accessing-properties"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="compile-otherwise">
+  <h2><span class="chapter-num">71</span> Error Handling</h2>
+  <p>Use <code class="sp">compile:</code> / <code class="sp">otherwise:</code> like try/catch to handle errors:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>compile:
+    declare result = 10 / 0
+    display(result)
+otherwise:
+    display("Oops! Something went wrong.")</code></pre>
+</div>
+
+<div class="tutorial-section" id="assert">
+  <h2><span class="chapter-num">72</span> Assert</h2>
+  <p>Assert checks a condition and stops with an error if it's false:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>declare age = 25
+assert(age > 0, "Age must be positive!")
+display("Age is valid: " + age)</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="random">
+  <h2><span class="chapter-num">73</span> Random</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display(randInt(1, 100))          # Random integer 1-100
+display(decimals(random(), 4))    # Random float 0-1
+display(randText(8))              # Random string
+
+letarr colors = "Red", "Blue", "Green"
+display(randomChoice(colors))     # Random pick from array</code></pre>
+</div>
+
+<div class="tutorial-section" id="datetime">
+  <h2><span class="chapter-num">74</span> Date & Time</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display("Date: " + datenow())
+display("Time: " + timenow())
+display("Year: " + yearnow())
+display("Day: " + weekdayNow())</code></pre>
+</div>
+
+<div class="tutorial-section" id="json">
+  <h2><span class="chapter-num">75</span> JSON</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>declare jsonStr = '{"name":"Alice","age":25}'
+declare obj = jsonParse(jsonStr)
+display(obj.name)                    # Alice
+
+letarr data = 1, 2, 3
+display(jsonStringify(data))         # [1,2,3]</code></pre>
+</div>
+
+<div class="tutorial-section" id="http">
+  <h2><span class="chapter-num">76</span> HTTP Requests</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>declare response = httpGet("https://api.example.com/data")
+display(response)</code></pre>
+  <p>Methods: <code class="sp">httpGet</code>, <code class="sp">httpPost</code>, <code class="sp">httpPut</code>, <code class="sp">httpDelete</code></p>
+</div>
+
+<div class="tutorial-section" id="sleep">
+  <h2><span class="chapter-num">77</span> Sleep (Pause)</h2>
+<pre><code class="sp"><span class="label">Littlestar</span>display("Starting...")
+sleep(2000)          # Wait 2 seconds (2000 milliseconds)
+display("Done!")</code></pre>
+</div>
+
+<div class="tutorial-section" id="debug-mode">
+  <h2><span class="chapter-num">78</span> Debug Mode</h2>
+  <p>See every variable change in real-time:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>enable debug
+
+module littlestar:
+    spark main(1):
+        declare x = 10
+        set x = x + 5
+        display(x)
+    spark print:
+        main(1)</code></pre>
+  <p>Shows: <code class="sp">🐛 [line 5] x = 10</code>, <code class="sp">🐛 [line 6] set x = 15</code>, etc.</p>
+</div>
+
+<div class="tutorial-section" id="creator-mode">
+  <h2><span class="chapter-num">79</span> Creator Mode</h2>
+  <p>Enables <code class="sp">exportfile</code> to download files to your computer:</p>
+<pre><code class="sp"><span class="label">Littlestar</span>enable creator
+
+module littlestar:
+    spark main(1):
+        write("report.txt", "Hello World!")
+        exportfile report.txt      # Downloads the file!
+    spark print:
+        main(1)</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     REFERENCE
+══════════════════════════════════════════════════════ -->
+
+<div class="tutorial-section" id="all-keywords">
+  <h2><span class="chapter-num">📋</span> All Keywords</h2>
+  <table>
+    <tr><th>Category</th><th>Keywords</th></tr>
+    <tr><td>Structure</td><td><code class="sp">module</code>, <code class="sp">spark</code>, <code class="sp">main</code>, <code class="sp">print</code></td></tr>
+    <tr><td>Variables</td><td><code class="sp">declare</code>, <code class="sp">set</code>, <code class="sp">fix</code>, <code class="sp">del</code>, <code class="sp">swap</code>, <code class="sp">letarr</code>, <code class="sp">letobj</code></td></tr>
+    <tr><td>Conditions</td><td><code class="sp">when</code>, <code class="sp">elif</code>, <code class="sp">otherwise</code>, <code class="sp">match</code>, <code class="sp">case</code>, <code class="sp">default</code>, <code class="sp">contains</code></td></tr>
+    <tr><td>Loops</td><td><code class="sp">while</code>, <code class="sp">repeat this</code>, <code class="sp">stop</code>, <code class="sp">skip</code></td></tr>
+    <tr><td>Functions</td><td><code class="sp">func</code>, <code class="sp">return</code>, <code class="sp">export</code>, <code class="sp">private</code>, <code class="sp">import</code>, <code class="sp">from</code></td></tr>
+    <tr><td>Logic</td><td><code class="sp">and</code>, <code class="sp">or</code>, <code class="sp">not</code>, <code class="sp">yes</code>, <code class="sp">no</code></td></tr>
+    <tr><td>Error</td><td><code class="sp">compile</code>, <code class="sp">assert</code></td></tr>
+    <tr><td>Data</td><td><code class="sp">createdb</code>, <code class="sp">removedb</code></td></tr>
+    <tr><td>Files</td><td><code class="sp">save</code>, <code class="sp">savefile</code>, <code class="sp">exportfile</code>, <code class="sp">delete file</code></td></tr>
+    <tr><td>Web</td><td><code class="sp">web:</code>, <code class="sp">toHtml</code>, <code class="sp">toCss</code>, <code class="sp">toJavascript</code></td></tr>
+    <tr><td>Mode</td><td><code class="sp">enable</code>, <code class="sp">disable</code>, <code class="sp">creator</code>, <code class="sp">debug</code></td></tr>
+    <tr><td>Other</td><td><code class="sp">lbr</code>, <code class="sp">sleep</code></td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="all-functions">
+  <h2><span class="chapter-num">📋</span> All 170+ Functions</h2>
+  <table>
+    <tr><th>Category</th><th>Functions</th></tr>
+    <tr><td><strong>Output</strong> (3)</td><td><code class="sp">display</code>, <code class="sp">shine</code>, <code class="sp">glow</code></td></tr>
+    <tr><td><strong>Input</strong> (5)</td><td><code class="sp">input</code>, <code class="sp">readNum</code>, <code class="sp">readPassword</code>, <code class="sp">confirm</code>, <code class="sp">alert</code></td></tr>
+    <tr><td><strong>Math</strong> (30+)</td><td><code class="sp">sqrt</code>, <code class="sp">square</code>, <code class="sp">cube</code>, <code class="sp">cbrt</code>, <code class="sp">pow</code>, <code class="sp">abs</code>, <code class="sp">round</code>, <code class="sp">decimals</code>, <code class="sp">floor</code>, <code class="sp">ceil</code>, <code class="sp">sign</code>, <code class="sp">min</code>, <code class="sp">max</code>, <code class="sp">exp</code>, <code class="sp">log</code>, <code class="sp">ln</code>, <code class="sp">log10</code>, <code class="sp">log2</code>, <code class="sp">factorial</code>, <code class="sp">fibonacci</code>, <code class="sp">isPrime</code>, <code class="sp">primes</code>, <code class="sp">gcd</code>, <code class="sp">lcm</code>, <code class="sp">quadratic</code>, <code class="sp">distance</code>, <code class="sp">clamp</code>, <code class="sp">mod</code>, <code class="sp">percent</code>, <code class="sp">nthroot</code>, <code class="sp">comma</code></td></tr>
+    <tr><td><strong>Trig</strong> (18)</td><td><code class="sp">sin</code>, <code class="sp">cos</code>, <code class="sp">tan</code>, <code class="sp">asin</code>, <code class="sp">acos</code>, <code class="sp">atan</code>, <code class="sp">radsin</code>, <code class="sp">radcos</code>, <code class="sp">radtan</code>, <code class="sp">gradsin</code>, <code class="sp">gradcos</code>, <code class="sp">gradtan</code>, <code class="sp">sinh</code>, <code class="sp">cosh</code>, <code class="sp">tanh</code>, <code class="sp">degrad</code>, <code class="sp">raddeg</code></td></tr>
+    <tr><td><strong>Statistics</strong> (7)</td><td><code class="sp">sum</code>, <code class="sp">avg</code>, <code class="sp">median</code>, <code class="sp">mode</code>, <code class="sp">variance</code>, <code class="sp">stddev</code>, <code class="sp">range</code></td></tr>
+    <tr><td><strong>Even/Odd</strong> (6)</td><td><code class="sp">isEven</code>, <code class="sp">isOdd</code>, <code class="sp">evens</code>, <code class="sp">odds</code>, <code class="sp">evensBetween</code>, <code class="sp">oddsBetween</code></td></tr>
+    <tr><td><strong>Strings</strong> (20)</td><td><code class="sp">upper</code>, <code class="sp">lower</code>, <code class="sp">capitalize</code>, <code class="sp">sentence</code>, <code class="sp">toggle</code>, <code class="sp">trim</code>, <code class="sp">includes</code>, <code class="sp">startsWith</code>, <code class="sp">endsWith</code>, <code class="sp">charAt</code>, <code class="sp">replace</code>, <code class="sp">reverse</code>, <code class="sp">repeat</code>, <code class="sp">split</code>, <code class="sp">padLeft</code>, <code class="sp">padRight</code>, <code class="sp">wordCount</code>, <code class="sp">len</code></td></tr>
+    <tr><td><strong>Arrays</strong> (26)</td><td><code class="sp">add</code>, <code class="sp">addFirst</code>, <code class="sp">insertAt</code>, <code class="sp">remove</code>, <code class="sp">removeFirst</code>, <code class="sp">removeAt</code>, <code class="sp">removeItem</code>, <code class="sp">contains</code>, <code class="sp">indexOf</code>, <code class="sp">sort</code>, <code class="sp">dsort</code>, <code class="sp">reverse</code>, <code class="sp">unique</code>, <code class="sp">first</code>, <code class="sp">last</code>, <code class="sp">count</code>, <code class="sp">slice</code>, <code class="sp">concat</code>, <code class="sp">join</code>, <code class="sp">flatten</code>, <code class="sp">chunk</code>, <code class="sp">zip</code>, <code class="sp">map</code>, <code class="sp">filter</code></td></tr>
+    <tr><td><strong>Type</strong> (8)</td><td><code class="sp">type</code>, <code class="sp">isStr</code>, <code class="sp">isNum</code>, <code class="sp">isArr</code>, <code class="sp">isObj</code>, <code class="sp">isBool</code>, <code class="sp">toStr</code>, <code class="sp">toNum</code>, <code class="sp">toInt</code></td></tr>
+    <tr><td><strong>Conversion</strong> (5)</td><td><code class="sp">convert</code>, <code class="sp">convertCurrency</code>, <code class="sp">bin</code>, <code class="sp">oct</code>, <code class="sp">hex</code></td></tr>
+    <tr><td><strong>Geometry</strong> (3)</td><td><code class="sp">area</code>, <code class="sp">perimeter</code>, <code class="sp">volume</code></td></tr>
+    <tr><td><strong>Fractions</strong> (3)</td><td><code class="sp">fraction</code>, <code class="sp">properFraction</code>, <code class="sp">improperFraction</code></td></tr>
+    <tr><td><strong>Random</strong> (4)</td><td><code class="sp">random</code>, <code class="sp">randInt</code>, <code class="sp">randText</code>, <code class="sp">randomChoice</code></td></tr>
+    <tr><td><strong>Date/Time</strong> (14)</td><td><code class="sp">datenow</code>, <code class="sp">timenow</code>, <code class="sp">yearnow</code>, <code class="sp">monthnow</code>, <code class="sp">daynow</code>, <code class="sp">hournow</code>, <code class="sp">minutenow</code>, <code class="sp">secondnow</code>, <code class="sp">weekdayNow</code>, <code class="sp">months</code>, <code class="sp">days</code>, <code class="sp">timestamp</code>, <code class="sp">elapsed</code>, <code class="sp">format</code></td></tr>
+    <tr><td><strong>Files</strong> (4)</td><td><code class="sp">read</code>, <code class="sp">write</code>, <code class="sp">append</code>, <code class="sp">exists</code></td></tr>
+    <tr><td><strong>Database</strong> (4)</td><td><code class="sp">fetch</code>, <code class="sp">countdb</code>, <code class="sp">hasdb</code>, <code class="sp">listdbs</code></td></tr>
+    <tr><td><strong>JSON</strong> (2)</td><td><code class="sp">jsonParse</code>, <code class="sp">jsonStringify</code></td></tr>
+    <tr><td><strong>Web</strong> (4)</td><td><code class="sp">toHtml</code>, <code class="sp">toCss</code>, <code class="sp">toJavascript</code>, <code class="sp">web:</code></td></tr>
+    <tr><td><strong>Other</strong> (5)</td><td><code class="sp">hash</code>, <code class="sp">search</code>, <code class="sp">calc</code>, <code class="sp">image</code>, <code class="sp">sleep</code></td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="all-constants">
+  <h2><span class="chapter-num">📋</span> All Constants</h2>
+  <table>
+    <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+    <tr><td><code class="sp">pi</code></td><td>3.14159...</td><td>Pi (π)</td></tr>
+    <tr><td><code class="sp">e</code></td><td>2.71828...</td><td>Euler's number</td></tr>
+    <tr><td><code class="sp">tau</code></td><td>6.28318...</td><td>Tau (2π)</td></tr>
+    <tr><td><code class="sp">phi</code></td><td>1.61803...</td><td>Golden ratio</td></tr>
+    <tr><td><code class="sp">c</code></td><td>299,792,458</td><td>Speed of light (m/s)</td></tr>
+    <tr><td><code class="sp">g</code></td><td>9.80665</td><td>Gravity (m/s²)</td></tr>
+    <tr><td><code class="sp">inf</code></td><td>∞</td><td>Infinity</td></tr>
+    <tr><td><code class="sp">version</code></td><td>"2.0"</td><td>Littlestar version</td></tr>
+    <tr><td><code class="sp">author</code></td><td>"Godspower Kenneth U."</td><td>Creator</td></tr>
+    <tr><td><code class="sp">langname</code></td><td>"Littlestar"</td><td>Language name</td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="common-errors">
+  <h2><span class="chapter-num">❌</span> Common Errors & How to Fix Them</h2>
+  <table>
+    <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+    <tr><td><em>Missing 'module littlestar:'</em></td><td>File doesn't start correctly</td><td>Add <code class="sp">module littlestar:</code> as first line</td></tr>
+    <tr><td><em>Missing 'spark print:'</em></td><td>No print block</td><td>Add <code class="sp">spark print:</code> with <code class="sp">main(N)</code> calls</td></tr>
+    <tr><td><em>Variable not declared</em></td><td>Using <code class="sp">set</code> before <code class="sp">declare</code></td><td>Use <code class="sp">declare x = ...</code> first</td></tr>
+    <tr><td><em>Variable is FIXED</em></td><td>Trying to change a constant</td><td>Use <code class="sp">declare</code> instead of <code class="sp">fix</code></td></tr>
+    <tr><td><em>Loop ran too many times</em></td><td>Infinite loop</td><td>Make sure loop variable changes</td></tr>
+    <tr><td><em>main(N) is missing</em></td><td>Sequential numbering broken</td><td>Number mains: 1, 2, 3...</td></tr>
+    <tr><td><em>Function not defined</em></td><td>Calling before defining</td><td>Define <code class="sp">func</code> before calling</td></tr>
+    <tr><td><em>Infinite loop with skip</em></td><td>Increment after skip</td><td>Move <code class="sp">set i = i + 1</code> BEFORE <code class="sp">skip</code></td></tr>
+  </table>
+</div>
+
+<div class="tutorial-section" id="best-practices">
+  <h2><span class="chapter-num">✅</span> Best Practices</h2>
+  <ol>
+    <li><strong>Use descriptive variable names</strong>: <code class="sp">totalPrice</code> not <code class="sp">tp</code></li>
+    <li><strong>Add comments</strong> to explain WHY you did something</li>
+    <li><strong>Indent properly</strong> — 4 spaces for each level</li>
+    <li><strong>Use <code class="sp">declare</code> for variables</strong>, <code class="sp">letarr</code> for arrays, <code class="sp">fix</code> for constants</li>
+    <li><strong>Test your code often</strong> — run after every few lines</li>
+    <li><strong>When using <code class="sp">skip</code> in loops</strong>, always increment BEFORE the skip</li>
+    <li><strong>Use <code class="sp">decimals()</code></strong> for money formatting</li>
+    <li><strong>Use <code class="sp">comma()</code></strong> for large numbers</li>
+    <li><strong>Break code into functions</strong> when it gets long</li>
+    <li><strong>Use multiple <code class="sp">spark main()</code> blocks</strong> to organize your program</li>
+  </ol>
+</div>
+
+<div class="tutorial-section" id="example-projects">
+  <h2><span class="chapter-num">🎯</span> Example Projects</h2>
+
+  <h3>BMI Calculator</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare weight = readNum("Enter weight (kg):")
+        declare height = readNum("Enter height (m):")
+
+        declare bmi = decimals(weight / (height * height), 2)
+        display("Your BMI: " + bmi)
+
+        when bmi < 18.5:
+            display("Category: Underweight")
+        elif bmi < 25:
+            display("Category: Normal ✅")
+        elif bmi < 30:
+            display("Category: Overweight")
+        otherwise:
+            display("Category: Obese")
+
+    spark print:
+        main(1)</code></pre>
+
+  <h3>Number Guessing Game</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        declare secret = randInt(1, 10)
+        declare guess = readNum("Guess a number 1-10:")
+
+        when guess == secret:
+            glow("🎉 Correct! It was " + secret)
+        elif guess < secret:
+            display("Too low! It was " + secret)
+        otherwise:
+            display("Too high! It was " + secret)
+
+    spark print:
+        main(1)</code></pre>
+
+  <h3>Shopping Cart</h3>
+<pre><code class="sp"><span class="label">Littlestar</span>module littlestar:
+
+    spark main(1):
+        letarr items = "Apple", "Mango", "Bread", "Milk"
+        letarr prices = 2.50, 3.75, 4.00, 2.25
+
+        declare total = 0
+        declare i = 0
+
+        display("🛒 Shopping Cart")
+        display("─────────────────")
+        while i < len(items):
+            display(items[i] + ": $" + decimals(prices[i], 2))
+            set total = total + prices[i]
+            set i = i + 1
+
+        display("─────────────────")
+        glow("Total: $" + comma(decimals(total, 2)))
+
+    spark print:
+        main(1)</code></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+
+<div class="nav-buttons">
+  <a href="https://paschal6.github.io/littlestar-app/index.html" class="nav-btn nav-prev">← Back to Home</a>
+  <a href="app.html" class="nav-btn nav-next">Try Littlestar Studio →</a>
+</div>
+
+<div class="tutorial-footer">
+  <p>🌟 <strong>Littlestar Programming Language</strong> — Created by <a href="https://github.com/Paschal6">Godspower Kenneth U.</a></p>
+  <p style="margin-top:8px;"><a href="https://paschal6.github.io/littlestar-app/">Home</a> · <a href="https://paschal6.github.io/littlestar-app/app.html">Studio</a> · <a href="https://github.com/Paschal6/littlestar-app">GitHub</a></p>
+  <p style="margin-top:12px;font-size:.8rem;">© 2025 Godspower Kenneth U. · MIT License</p>
+</div>
+
+  </div> <!-- /content -->
+</div> <!-- /main -->
+
+<script>
+document.querySelectorAll('.sidebar a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+
+const sections = document.querySelectorAll('.tutorial-section');
+const navLinks = document.querySelectorAll('.sidebar a');
+
+function updateActiveLink() {
+  let current = '';
+  sections.forEach(section => {
+    const top = section.offsetTop - 120;
+    if (window.scrollY >= top) current = section.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink);
+window.addEventListener('load', updateActiveLink);
+</script>
+
+</body>
+</html>
