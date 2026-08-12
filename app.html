@@ -119,7 +119,6 @@
       flex: 1; padding: 20px; font-family: 'Inter', monospace; font-size: 15px;
       overflow-y: auto; background: #0a0a15; white-space: pre-wrap; word-break: break-word;
     }
-    /* FIX: use an iframe for web preview to isolate styles completely */
     #web-view {
       flex: 1;
       background: #fff;
@@ -210,6 +209,16 @@
       <option value="numberSystems">🔢 Number Systems</option>
       <option value="statistics">📊 Statistics</option>
       <option value="commaExample">💰 Comma Formatter</option>
+      <option value="isWholeExample">🔢 isWhole Checker</option>
+      <option value="numberCheckers">🔢 Number Checkers</option>
+    </optgroup>
+    <optgroup label="🔢 Equations &amp; Sets">
+      <option value="solveEquation">🔣 Equation Solver</option>
+      <option value="mathSets">🧮 Math Sets</option>
+    </optgroup>
+    <optgroup label="🔁 New Loops">
+      <option value="forLoop">🔄 For Loop (as/till)</option>
+      <option value="repeatN">🔁 Repeat N Times</option>
     </optgroup>
     <optgroup label="🌍 Real World">
       <option value="bmi">⚖️ BMI Calculator</option>
@@ -236,9 +245,9 @@
       <option value="randomGenerator">🎰 Random Generator</option>
     </optgroup>
     <optgroup label="🌐 Web Design">
-      <option value="web">🌐 Web Basics</option>
+      <option value="webBasic">🌐 Web Basics</option>
       <option value="webCard">👤 Profile Card</option>
-      <option value="webBlock">🌐 web: Block (HTML5)</option>
+      <option value="webBlock">🌐 Full HTML5 Page</option>
     </optgroup>
     <optgroup label="🌍 Conversions">
       <option value="currencyConverter">💱 Currency (Live!)</option>
@@ -299,7 +308,6 @@
       </div>
     </div>
     <div id="console-view"><span class="out-empty">🌟 Click ▶️ Run to see output</span></div>
-    <!-- FIX: use iframe so parent CSS never leaks into web preview -->
     <iframe id="web-view" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
   </div>
 </div>
@@ -324,7 +332,6 @@ class BreakSignal    extends Error { constructor(){ super('break'); } }
 class ContinueSignal extends Error { constructor(){ super('continue'); } }
 class ReturnSignal   extends Error { constructor(v){ super('return'); this.value=v; } }
 
-// ═══ FIXED: rewriteContains now uses __ct which matches the ctx registration ═══
 function rewriteContains(expr){
   const parts = expr.split(/\s+contains\s+/);
   if(parts.length < 2) return expr;
@@ -345,37 +352,27 @@ function rewriteContains(expr){
   return result;
 }
 
-// FIX: Helper to render web preview into iframe (styles never leak in)
-function renderWebPreview(html, css){
+function renderWebPreview(html){
   const iframe = document.getElementById('web-view');
-  let content = '';
-  const lower = (html||'').toLowerCase();
-  if(lower.includes('<!doctype html>') || lower.includes('<html')){
-    // Complete HTML document → use as-is
-    content = html;
-  } else {
-    // Fragment → wrap it
-    content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${css||''}</style></head><body>${html||''}</body></html>`;
-  }
-  iframe.srcdoc = content;
+  iframe.srcdoc = html || '';
 }
 
 class Littlestar {
   constructor(){
     this.vars={};this.fixed=new Set();this.funcs={};this.dbs={};
-    this.web={html:'',css:''};this.moduleFiles={};
+    this.web={html:''};this.moduleFiles={};
     this.creatorMode=false;this.debugMode=false;
     this.startTime=0;this.currentLine=0;this.sourceLines=[];
     this.currencyRates=null;this.currencyLastFetch=0;
     this.callbacks={
       output:(t,type)=>appendLine(t,type||'normal'),
       input: async(p,type)=>await modalInput(p,type),
-      web:(h,c)=>renderWebPreview(h,c)
+      web:(h)=>renderWebPreview(h)
     };
   }
   reset(){
     this.vars={};this.fixed=new Set();this.funcs={};this.dbs={};
-    this.web={html:'',css:''};
+    this.web={html:''};
     this.creatorMode=false;this.debugMode=false;
     this.currentLine=0;this.sourceLines=[];this.startTime=0;
   }
@@ -714,8 +711,13 @@ class Littlestar {
       earthmass:5.972e24,sunmass:1.989e30,
       au:149597870700,lightyear:9.461e15,parsec:3.086e16,
       yeardays:365.25,weekdays:7,hoursec:3600,daysec:86400,yearsec:31557600,
+      dayslist:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
       newline:'\n',tab:'\t',space:' ',empty:'',
       version:'2.0',author:'Godspower Kenneth U.',langname:'Littlestar',
+      unionSymbol:'∪',intersectionSymbol:'∩',subsetSymbol:'⊆',supersetSymbol:'⊇',
+      properSubsetSymbol:'⊂',properSupersetSymbol:'⊃',
+      emptySetSymbol:'∅',elementOfSymbol:'∈',notElementOfSymbol:'∉',
+      universalSetSymbol:'𝕌',
     };
 
     const UNITS={
@@ -808,9 +810,9 @@ class Littlestar {
       radsin:`Math.sin`,radcos:`Math.cos`,radtan:`Math.tan`,
       gradsin:`((g)=>Math.sin(g*Math.PI/200))`,gradcos:`((g)=>Math.cos(g*Math.PI/200))`,gradtan:`((g)=>Math.tan(g*Math.PI/200))`,
       sinh:`Math.sinh`,cosh:`Math.cosh`,tanh:`Math.tanh`,
-      logsin:`((d)=>Math.log(Math.sin(d*Math.PI/180)))`,
-      logcos:`((d)=>Math.log(Math.cos(d*Math.PI/180)))`,
-      logtan:`((d)=>Math.log(Math.tan(d*Math.PI/180)))`,
+      logsin:`((d)=>Math.log10(Math.sin(d*Math.PI/180)))`,
+      logcos:`((d)=>Math.log10(Math.cos(d*Math.PI/180)))`,
+      logtan:`((d)=>Math.log10(Math.tan(d*Math.PI/180)))`,
       degrad:`((d)=>d*Math.PI/180)`,degtorad:`((d)=>d*Math.PI/180)`,
       raddeg:`((r)=>r*180/Math.PI)`,radtodeg:`((r)=>r*180/Math.PI)`,
       factorial:`((n)=>{let r=1;for(let i=2;i<=n;i++)r*=i;return r;})`,
@@ -878,6 +880,12 @@ class Littlestar {
       isStr:`((x)=>typeof x==="string")`,isNum:`((x)=>typeof x==="number"&&!isNaN(x))`,
       isArr:`Array.isArray`,isObj:`((x)=>typeof x==="object"&&x!==null&&!Array.isArray(x))`,
       isBool:`((x)=>typeof x==="boolean")`,type:`((x)=>Array.isArray(x)?"array":typeof x)`,len:`((x)=>x.length)`,
+      isWhole:`((x)=>typeof x==="number"&&!isNaN(x)&&x===Math.floor(x))`,
+      isInteger:`((x)=>typeof x==="number"&&!isNaN(x)&&x===Math.floor(x))`,
+      isDecimal:`((x)=>typeof x==="number"&&!isNaN(x)&&x!==Math.floor(x))`,
+      isPositive:`((x)=>typeof x==="number"&&!isNaN(x)&&x>0)`,
+      isNegative:`((x)=>typeof x==="number"&&!isNaN(x)&&x<0)`,
+      isZero:`((x)=>typeof x==="number"&&!isNaN(x)&&x===0)`,
       random:`Math.random`,randInt:`((a,b)=>Math.floor(Math.random()*(b-a+1))+a)`,
       randText:`((n=5)=>Math.random().toString(36).substr(2,n))`,
       randomChoose:`((...args)=>{const a=args.length===1&&Array.isArray(args[0])?args[0]:args;return a[Math.floor(Math.random()*a.length)];})`,
@@ -906,6 +914,111 @@ class Littlestar {
       exists:`((f)=>{try{return localStorage.getItem("lstar_file_"+f)!==null;}catch(e){return false;}})`,
       jsonParse:`((s)=>{try{return JSON.parse(String(s));}catch(e){return null;}})`,
       jsonStringify:`((o)=>{try{return JSON.stringify(o);}catch(e){return "";}})`,
+      solve:`((eq)=>{
+        eq=String(eq).replace(/\\s/g,'').replace(/\\*\\*/g,'^');
+        let lhs,rhs;
+        if(eq.includes('=')){const p=eq.split('=');lhs=p[0];rhs=p[1]||'0';}
+        else{lhs=eq;rhs='0';}
+        const vMatch=(lhs+rhs).match(/[a-zA-Z]/);
+        const v=vMatch?vMatch[0]:'x';
+        function parseSide(str){
+          str=str.replace(/-/g,'+-');
+          if(str.startsWith('+'))str=str.substring(1);
+          const terms=str.split('+').filter(t=>t.length>0);
+          let a=0,b=0,c=0;
+          for(let t of terms){
+            let sign=1;
+            if(t.startsWith('-')){sign=-1;t=t.substring(1);}
+            if(!t)continue;
+            const sqPattern=new RegExp('^(.*?)'+v+'\\\\^2$|^(.*?)'+v+'\\\\*'+v+'$|^(.*?)'+v+'²$');
+            const sqM=t.match(sqPattern);
+            if(sqM){
+              const coefStr=(sqM[1]||sqM[2]||sqM[3]||'').replace(/\\*$/,'')||'1';
+              a+=sign*(coefStr==='+'||coefStr===''?1:Number(coefStr));
+              continue;
+            }
+            const linPattern=new RegExp('^(.*?)'+v+'$');
+            const linM=t.match(linPattern);
+            if(linM){
+              const coefStr=linM[1].replace(/\\*$/,'')||'1';
+              b+=sign*(coefStr==='+'||coefStr===''?1:Number(coefStr));
+              continue;
+            }
+            const num=Number(t);
+            if(!isNaN(num))c+=sign*num;
+          }
+          return{a,b,c};
+        }
+        const L=parseSide(lhs),R=parseSide(rhs);
+        const a=L.a-R.a,b=L.b-R.b,c=L.c-R.c;
+        if(a!==0){
+          const disc=b*b-4*a*c;
+          if(disc>0){
+            const s=Math.sqrt(disc);
+            const r1=Math.round(((-b+s)/(2*a))*1e10)/1e10;
+            const r2=Math.round(((-b-s)/(2*a))*1e10)/1e10;
+            return v+' = '+r1+' or '+v+' = '+r2;
+          }
+          if(disc===0){
+            const r=Math.round((-b/(2*a))*1e10)/1e10;
+            return v+' = '+r+' (double root)';
+          }
+          const re=Math.round((-b/(2*a))*1e10)/1e10;
+          const im=Math.round((Math.sqrt(-disc)/(2*a))*1e10)/1e10;
+          return v+' = '+re+'+'+im+'i or '+v+' = '+re+'-'+im+'i';
+        }
+        if(b!==0){
+          const r=Math.round((-c/b)*1e10)/1e10;
+          return v+' = '+r;
+        }
+        return c===0?'infinite solutions':'no solution';
+      })`,
+      simultaneousLinear:`((eq1,eq2)=>{
+        function parse(eq){
+          eq=String(eq).replace(/\\s/g,'');
+          const parts=eq.split('=');
+          const lhs=parts[0],rhs=Number(parts[1])||0;
+          let a=0,b=0;
+          const terms=lhs.replace(/-/g,'+-').split('+').filter(t=>t);
+          for(const t of terms){
+            const s=t.trim();
+            if(s.includes('x')){const c=s.replace('x','').replace(/\\*/g,'')||'1';a+=c==='-'?-1:Number(c);}
+            else if(s.includes('y')){const c=s.replace('y','').replace(/\\*/g,'')||'1';b+=c==='-'?-1:Number(c);}
+          }
+          return{a,b,c:rhs};
+        }
+        const e1=parse(eq1),e2=parse(eq2);
+        const det=e1.a*e2.b-e2.a*e1.b;
+        if(det===0)return e1.a*e2.c===e2.a*e1.c?'infinite solutions':'no solution';
+        const x=(e1.c*e2.b-e2.c*e1.b)/det;
+        const y=(e1.a*e2.c-e2.a*e1.c)/det;
+        return{x:Math.round(x*1e10)/1e10,y:Math.round(y*1e10)/1e10};
+      })`,
+      mathset:`((op,...args)=>{
+        op=String(op).toLowerCase();
+        const toSet=(a)=>Array.isArray(a)?[...new Set(a)]:[...new Set([a])];
+        const A=args[0]?toSet(args[0]):[];
+        const B=args[1]?toSet(args[1]):[];
+        if(op==='union')return[...new Set([...A,...B])];
+        if(op==='intersection')return A.filter(x=>B.includes(x));
+        if(op==='difference')return A.filter(x=>!B.includes(x));
+        if(op==='symmetric'||op==='symmetricdifference')return[...A.filter(x=>!B.includes(x)),...B.filter(x=>!A.includes(x))];
+        if(op==='issubset')return A.every(x=>B.includes(x));
+        if(op==='issuperset')return B.every(x=>A.includes(x));
+        if(op==='ispropersubset')return A.every(x=>B.includes(x))&&A.length<B.length;
+        if(op==='ispropersuperset')return B.every(x=>A.includes(x))&&B.length<A.length;
+        if(op==='isequal'||op==='equals')return A.length===B.length&&A.every(x=>B.includes(x));
+        if(op==='isdisjoint')return A.every(x=>!B.includes(x));
+        if(op==='complement'){const U=args[1]?toSet(args[1]):[];return U.filter(x=>!A.includes(x));}
+        if(op==='powerset'){const r=[[]];for(const x of A){const n=r.length;for(let i=0;i<n;i++)r.push([...r[i],x]);}return r;}
+        if(op==='cartesian'){const r=[];for(const a of A)for(const b of B)r.push([a,b]);return r;}
+        if(op==='cardinality'||op==='size')return A.length;
+        if(op==='ismember'||op==='contains')return A.includes(args[1]);
+        if(op==='add'){if(!A.includes(args[1]))A.push(args[1]);return A;}
+        if(op==='remove')return A.filter(x=>x!==args[1]);
+        if(op==='toset')return A;
+        return A;
+      })`,
     };
 
     const sortedKeys=Object.keys(B).sort((a,b)=>b.length-a.length);
@@ -960,7 +1073,6 @@ class Littlestar {
       };
     }
 
-    // ═══ FIXED: now register __ct (matches what rewriteContains produces) ═══
     const ctx={...CONSTANTS,...this.vars,...userFns,...shapeBuiltins,
       __dbs:this.dbs,__curr:this.currencyRates||CURRENCY,__unitCats:UNITS,
       __ct:(a,b)=>Array.isArray(a)?a.indexOf(b)!==-1:String(a).includes(String(b))};
@@ -981,6 +1093,17 @@ class Littlestar {
     line=line.trim();
     if(!line||line.startsWith('#'))return;
     line=this.stripInlineComment(line);if(!line)return;
+
+    // --- Prevent Redeclaration ---
+    const declMatch = line.match(/^(?:declare|make|fix|letarr|letset)\s+(\w+)/);
+    if(declMatch && (declMatch[1] in this.vars)) {
+      throw new LittlestarError(
+        `🌟 Variable '${declMatch[1]}' is already declared${this.lineTag()}.`,
+        `Use 'set ${declMatch[1]} = ...' to change its value.`
+      );
+    }
+    // ----------------------------------
+
     if(line==='enable creator'||line==='disable creator')return;
     if(line==='enable debug'||line==='disable debug')return;
     if(line==='stop')throw new BreakSignal();
@@ -1012,6 +1135,24 @@ class Littlestar {
       if(this.fixed.has(m[1]))throw new LittlestarError(`🌟 '${m[1]}' is FIXED!`);
       if(!(m[1] in this.vars))throw new LittlestarError(`🌟 '${m[1]}' was never declared.`,`Use 'declare ${m[1]} = ...' first.`);
       this.vars[m[1]]=this.eval(m[2]);return;
+    }
+    m=line.match(/^letset\s+(\w+)\s*=\s*(.+)$/);
+    if(m){
+      const raw=m[2].trim();
+      let arr;
+      const parts=this.splitArgs(raw);
+      if(parts.length>1){
+        arr=parts.map(x=>this.eval(x.trim()));
+      }else{
+        try{
+          const r=this.eval(raw);
+          arr=Array.isArray(r)?r:[r];
+        }catch(e){
+          arr=[raw];
+        }
+      }
+      this.vars[m[1]]=[...new Set(arr)];
+      return;
     }
     m=line.match(/^letarr\s+(\w+)\s*=\s*(.+)$/);
     if(m){
@@ -1095,10 +1236,41 @@ class Littlestar {
         }
         i=j;continue;
       }
-      if(s==='repeat this:'){
+      if(s==='repeat this:'||/^repeat\s+this\s*\(\s*\d+\s*\)\s*:$/.test(s)){
+        const repMatch=s.match(/^repeat\s+this\s*\(\s*(\d+)\s*\)\s*:$/);
+        const times=repMatch?parseInt(repMatch[1]):1;
         const block=[];let j=i+1;
         while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){block.push(lines[j]);j++;}
-        this.execBlockSync(block,ind+1);i=j;continue;
+        for(let ri=0;ri<times;ri++){
+          try{this.execBlockSync(block,ind+1);}
+          catch(err){if(err instanceof BreakSignal)break;throw err;}
+        }
+        i=j;continue;
+      }
+      let forMatch=s.match(/^as\s+(\w+)\s+in\s+(.+)\s+till\s+(.+)\s*:$/);
+      if(forMatch){
+        const varName=forMatch[1];
+        const startVal=Math.round(this.eval(forMatch[2]));
+        const endVal=Math.round(this.eval(forMatch[3]));
+        const block=[];let j=i+1;
+        while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){block.push(lines[j]);j++;}
+        const step=startVal<=endVal?1:-1;
+        const oldVar=this.vars[varName];
+        const hadVar=varName in this.vars;
+        let iter=0,broke=false;
+        for(let fi=startVal;step>0?fi<=endVal:fi>=endVal;fi+=step){
+          if(iter++>=10000)throw new LittlestarError(`🌟 For loop ran too many times.`,`Check your range.`);
+          this.vars[varName]=fi;
+          try{this.execBlockSync(block,ind+1);}
+          catch(err){
+            if(err instanceof BreakSignal){broke=true;break;}
+            if(err instanceof ContinueSignal)continue;
+            throw err;
+          }
+        }
+        if(!hadVar)delete this.vars[varName];
+        else this.vars[varName]=oldVar;
+        i=j;continue;
       }
       m=s.match(/^while\s+(.+):$/);
       if(m){
@@ -1112,7 +1284,6 @@ class Littlestar {
           catch(err){
             if(err instanceof BreakSignal){broke=true;break;}
             if(err instanceof ContinueSignal){
-              // Check if variables changed since last iteration
               const nowSnapshot=JSON.stringify(this.vars);
               if(nowSnapshot===lastVarsSnapshot){
                 noChangeCount++;
@@ -1138,11 +1309,22 @@ class Littlestar {
         const tb=[];let j=i+1;
         while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){tb.push(lines[j]);j++;}
         let ok=false;
-        try{this.execBlockSync(tb,ind+1);ok=true;}catch(e){ok=false;}
+        let caughtError=null;
+        try{
+          this.execBlockSync(tb,ind+1);
+          ok=true;
+        }catch(e){
+          ok=false;
+          caughtError=e;
+          if(this.debugMode){
+            this.emit('output',`🐛 compile: caught error → ${e.message}`,'debug');
+          }
+        }
         if(j<lines.length&&this.stripInlineComment(lines[j].trim()).trim()==='otherwise:'&&getInd(lines[j])===ind){
           const cb=[];let k=j+1;
           while(k<lines.length&&(getInd(lines[k])>ind||!lines[k].trim())){cb.push(lines[k]);k++;}
-          if(!ok)this.execBlockSync(cb,ind+1);j=k;
+          if(!ok)this.execBlockSync(cb,ind+1);
+          j=k;
         }
         i=j;continue;
       }
@@ -1155,6 +1337,17 @@ class Littlestar {
     line=line.trim();
     if(!line||line.startsWith('#'))return;
     line=this.stripInlineComment(line);if(!line)return;
+
+    // --- Prevent Redeclaration ---
+    const declMatch = line.match(/^(?:declare|make|fix|letarr|letset)\s+(\w+)/);
+    if(declMatch && (declMatch[1] in this.vars)) {
+      throw new LittlestarError(
+        `🌟 Variable '${declMatch[1]}' is already declared${this.lineTag()}.`,
+        `Use 'set ${declMatch[1]} = ...' to change its value.`
+      );
+    }
+    // ----------------------------------
+
     if(line==='enable creator'||line==='disable creator')return;
     if(line==='enable debug'||line==='disable debug')return;
     if(line==='stop')throw new BreakSignal();
@@ -1213,13 +1406,6 @@ class Littlestar {
       else this.emit('output',text);return;
     }
 
-    m=line.match(/^toHtml\s*\((.+)\)\s*$/);
-    if(m){this.web.html+=this.eval(m[1])+'\n';this.emit('web',this.web.html,this.web.css);return;}
-    m=line.match(/^toCss\s*\((.+)\)\s*$/);
-    if(m){this.web.css+=this.eval(m[1])+'\n';this.emit('web',this.web.html,this.web.css);return;}
-    m=line.match(/^toJavascript\s*\((.+)\)\s*$/);
-    if(m){this.web.html+=`<script>${this.eval(m[1])}<\/script>\n`;this.emit('web',this.web.html,this.web.css);return;}
-
     m=line.match(/^(?:declare|make)\s+(\w+)\s*=\s*input\s*\((.*)\)\s*$/);
     if(m){this.vars[m[1]]=await this.emit('input',m[2].trim()?String(this.eval(m[2])):'Enter text:','text');return;}
     m=line.match(/^(?:declare|make)\s+(\w+)\s*=\s*message\s*\((.*)\)\s*$/);
@@ -1239,6 +1425,25 @@ class Littlestar {
     }
     m=line.match(/^alert\s*\((.*)\)\s*$/);
     if(m){await this.emit('input',m[1].trim()?String(this.eval(m[1])):'Alert!','alert');return;}
+
+    m=line.match(/^letset\s+(\w+)\s*=\s*(.+)$/);
+    if(m){
+      const raw=m[2].trim();
+      let arr;
+      const parts=this.splitArgs(raw);
+      if(parts.length>1){
+        arr=parts.map(x=>this.eval(x.trim()));
+      }else{
+        try{
+          const r=this.eval(raw);
+          arr=Array.isArray(r)?r:[r];
+        }catch(e){
+          arr=[raw];
+        }
+      }
+      this.vars[m[1]]=[...new Set(arr)];
+      return;
+    }
 
     m=line.match(/^letarr\s+(\w+)\s*=\s*fetch\s*\((\w+)\.(\w+)\)\s*$/);
     if(m){const db=this.dbs[m[2]]||[];const idx=parseInt(m[3])-1||0;this.vars[m[1]]=db[idx]||{};return;}
@@ -1420,8 +1625,7 @@ class Littlestar {
           );
         }
         this.web.html=htmlContent;
-        this.web.css='';
-        this.emit('web',htmlContent,'');
+        this.emit('web',htmlContent);
         i=j;continue;
       }
 
@@ -1474,10 +1678,42 @@ class Littlestar {
         i=j;continue;
       }
 
-      if(s==='repeat this:'){
+      if(s==='repeat this:'||/^repeat\s+this\s*\(\s*\d+\s*\)\s*:$/.test(s)){
+        const repMatch=s.match(/^repeat\s+this\s*\(\s*(\d+)\s*\)\s*:$/);
+        const times=repMatch?parseInt(repMatch[1]):1;
         const block=[];let j=i+1;
         while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){block.push(lines[j]);j++;}
-        await this.execBlock(block,ind+1);i=j;continue;
+        for(let ri=0;ri<times;ri++){
+          try{await this.execBlock(block,ind+1);}
+          catch(err){if(err instanceof BreakSignal)break;throw err;}
+        }
+        i=j;continue;
+      }
+
+      let forMatch=s.match(/^as\s+(\w+)\s+in\s+(.+)\s+till\s+(.+)\s*:$/);
+      if(forMatch){
+        const varName=forMatch[1];
+        const startVal=Math.round(this.eval(forMatch[2]));
+        const endVal=Math.round(this.eval(forMatch[3]));
+        const block=[];let j=i+1;
+        while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){block.push(lines[j]);j++;}
+        const step=startVal<=endVal?1:-1;
+        const oldVar=this.vars[varName];
+        const hadVar=varName in this.vars;
+        let iter=0,broke=false;
+        for(let fi=startVal;step>0?fi<=endVal:fi>=endVal;fi+=step){
+          if(iter++>=10000)throw new LittlestarError(`🌟 For loop ran too many times.`,`Check your range.`);
+          this.vars[varName]=fi;
+          try{await this.execBlock(block,ind+1);}
+          catch(err){
+            if(err instanceof BreakSignal){broke=true;break;}
+            if(err instanceof ContinueSignal)continue;
+            throw err;
+          }
+        }
+        if(!hadVar)delete this.vars[varName];
+        else this.vars[varName]=oldVar;
+        i=j;continue;
       }
 
       m=s.match(/^while\s+(.+):$/);
@@ -1518,11 +1754,23 @@ class Littlestar {
         const tb=[];let j=i+1;
         while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){tb.push(lines[j]);j++;}
         let ok=false;
-        try{await this.execBlock(tb,ind+1);ok=true;}catch(e){ok=false;}
+        let caughtError=null;
+        try{
+          await this.execBlock(tb,ind+1);
+          ok=true;
+        }catch(e){
+          ok=false;
+          caughtError=e;
+          // Never re-throw — compile: swallows all errors
+          if(this.debugMode){
+            this.emit('output',`🐛 compile: caught error → ${e.message}`,'debug');
+          }
+        }
         if(j<lines.length&&this.stripInlineComment(lines[j].trim()).trim()==='otherwise:'&&getInd(lines[j])===ind){
           const cb=[];let k=j+1;
           while(k<lines.length&&(getInd(lines[k])>ind||!lines[k].trim())){cb.push(lines[k]);k++;}
-          if(!ok)await this.execBlock(cb,ind+1);j=k;
+          if(!ok)await this.execBlock(cb,ind+1);
+          j=k;
         }
         i=j;continue;
       }
@@ -1556,6 +1804,14 @@ class Littlestar {
 
       m=s.match(/^letobj\s+(\w+)\s*:$/);
       if(m){
+        // --- Prevent Redeclaration ---
+        if(m[1] in this.vars) {
+          throw new LittlestarError(
+            `🌟 Variable '${m[1]}' is already declared${this.lineTag()}.`,
+            `Use 'set' or rename the object.`
+          );
+        }
+        // ----------------------------------
         const obj={};let j=i+1;
         while(j<lines.length&&(getInd(lines[j])>ind||!lines[j].trim())){
           const cleaned=this.stripInlineComment(lines[j].trim()).trim();
@@ -1596,8 +1852,9 @@ class Littlestar {
 
 // ═══ SYNTAX HIGHLIGHTER ═══
 const KEYWORDS=['module','declare','make','set','fix','when','elif','otherwise','while','repeat','this',
-  'compile','import','export','private','and','or','not','to','from','letarr','letobj',
-  'createdb','removedb','func','lion','main','print','save','del','delete','file','web','contains'];
+  'compile','import','export','private','and','or','not','to','from','letarr','letobj','letset',
+  'createdb','removedb','func','lion','main','print','save','del','delete','file','web','contains',
+  'as','till'];
 const SPARK_KW=['spark'];
 const BUILTINS=['display','shine','glow','input','readNum','readPassword','confirm','alert','message','search',
   'sqrt','square','cbrt','cube','pow','lcm','hcf','gcd','abs','approximate','round','decimals',
@@ -1615,24 +1872,27 @@ const BUILTINS=['display','shine','glow','input','readNum','readPassword','confi
   'bin','oct','hex','toInt','toNum','toStr','comma',
   'upper','lower','sentence','toggle','trim','includes','charAt','pick',
   'startsWith','endsWith','repeat','replace','split','padLeft','padRight','wordCount','capitalize',
-  'isStr','isNum','isArr','isObj','isBool','type','len',
+  'isStr','isNum','isArr','isObj','isBool','isWhole','isInteger','isDecimal','isPositive','isNegative','isZero','type','len',
   'random','randInt','randText','randomChoice','randomChoose',
   'datenow','timenow','yearnow','monthnow','daynow','hournow','minutenow','secondnow',
   'months','days','weekdayNow',
   'read','write','append','exists',
-  'toHtml','toCss','toJavascript',
   'enable','creator','disable','debug','match','case','default',
   'fetch','convertCurrency','calc','convert','area','perimeter','volume','hash','lbr',
   'map','filter','flatten','chunk','zip','elapsed','timestamp','format',
   'countdb','hasdb','listdbs','jsonParse','jsonStringify',
   'fraction','properFraction','improperFraction','image','swap','assert','sleep',
-  'httpGet','httpPost','httpPut','httpDelete'];
+  'httpGet','httpPost','httpPut','httpDelete',
+  'solve','simultaneousLinear','mathset'];
 const BOOLS=['yes','no'];
 const CONST_NAMES=[
   'pi','e','tau','phi','inf','ninf','nan','sqrt2','sqrt3','ln2','ln10','log2e','log10e',
   'c','g','avogadro','planck','boltzmann','earthmass','sunmass','au','lightyear','parsec',
   'yeardays','weekdays','hoursec','daysec','yearsec',
-  'newline','tab','space','empty','version','author','langname'
+  'newline','tab','space','empty','version','author','langname',
+  'unionSymbol','intersectionSymbol','subsetSymbol','supersetSymbol',
+  'properSubsetSymbol','properSupersetSymbol','emptySetSymbol',
+  'elementOfSymbol','notElementOfSymbol','universalSetSymbol','dayslist',
 ];
 
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -1813,10 +2073,12 @@ const EXAMPLES = {
     spark main(1):
         declare i = 0
         while i < 10:
-            set i = i + 1                # ← increment FIRST
+            set i = i + 1
             when i == 3:
-                skip                     # ← now safe!
+                display("Skipping 3")
+                skip
             when i == 7:
+                display("Stopping at 7")
                 stop
             display("i = " + i)
 
@@ -1941,13 +2203,110 @@ const EXAMPLES = {
     spark print:
         main(1)`,
 
+    isWholeExample:`module littlestar:
+
+    spark main(1):
+        display("=== isWhole() Checker ===")
+        display("42 → " + isWhole(42))
+        display("3.14 → " + isWhole(3.14))
+        display("10.0 → " + isWhole(10.0))
+        display("-7 → " + isWhole(-7))
+        display("2.5 → " + isWhole(2.5))
+        display("0 → " + isWhole(0))
+        display("'hello' → " + isWhole("hello"))
+        display("yes → " + isWhole(yes))
+
+        lbr
+        display("=== Real World: Age Validator ===")
+        declare age = 25
+        when isWhole(age) and age > 0:
+            display("✅ Valid age: " + age)
+        otherwise:
+            display("❌ Invalid age")
+
+        declare weirdAge = 25.7
+        when isWhole(weirdAge) and weirdAge > 0:
+            display("✅ Valid age: " + weirdAge)
+        otherwise:
+            display("❌ Invalid age: " + weirdAge + " (must be whole)")
+
+    spark print:
+        main(1)`,
+
+    numberCheckers:`module littlestar:
+
+    spark main(1):
+        display("=== 🔢 All Number Checkers ===")
+        display("")
+
+        display("--- isWhole / isInteger ---")
+        display("42 → " + isWhole(42))
+        display("3.14 → " + isWhole(3.14))
+        display("10.0 → " + isWhole(10.0))
+        display("-7 → " + isWhole(-7))
+
+        display("")
+        display("--- isDecimal ---")
+        display("3.14 → " + isDecimal(3.14))
+        display("42 → " + isDecimal(42))
+        display("0.5 → " + isDecimal(0.5))
+
+        display("")
+        display("--- isPositive ---")
+        display("42 → " + isPositive(42))
+        display("-5 → " + isPositive(-5))
+        display("0 → " + isPositive(0))
+
+        display("")
+        display("--- isNegative ---")
+        display("-10 → " + isNegative(-10))
+        display("5 → " + isNegative(5))
+        display("0 → " + isNegative(0))
+
+        display("")
+        display("--- isZero ---")
+        display("0 → " + isZero(0))
+        display("0.0 → " + isZero(0.0))
+        display("5 → " + isZero(5))
+
+    spark main(2):
+        display("")
+        display("=== 🎯 Real Example: Number Analyzer ===")
+
+        func analyze(n):
+            when not isNum(n):
+                return "Not a number"
+            when isZero(n):
+                return "Zero"
+            when isPositive(n) and isWhole(n):
+                return "Positive whole"
+            when isNegative(n) and isWhole(n):
+                return "Negative whole"
+            when isDecimal(n) and isPositive(n):
+                return "Positive decimal"
+            when isDecimal(n) and isNegative(n):
+                return "Negative decimal"
+            return "Unknown"
+
+        display("42 → " + analyze(42))
+        display("-7 → " + analyze(-7))
+        display("3.14 → " + analyze(3.14))
+        display("-2.5 → " + analyze(-2.5))
+        display("0 → " + analyze(0))
+        display("'hi' → " + analyze("hi"))
+
+    spark print:
+        main(1)
+        main(2)`,
+
   primeChecker:`module littlestar:
 
     spark main(1):
         letarr candidates = 2, 3, 4, 13, 17, 20, 97
         declare i = 0
+        declare n = 0
         while i < len(candidates):
-            declare n = candidates[i]
+            set n = candidates[i]
             when isPrime(n):
                 display(n + " is PRIME")
             otherwise:
@@ -2285,8 +2644,9 @@ const EXAMPLES = {
 
     spark main(1):
         declare i = 1
+        declare row = ""
         while i <= 5:
-            declare row = repeat("★ ", i)
+            set row = repeat("★ ", i)
             display(row)
             set i = i + 1
 
@@ -2318,12 +2678,25 @@ const EXAMPLES = {
     spark print:
         main(1)`,
 
-  web:`module littlestar:
+  webBasic:`module littlestar:
 
     spark main(1):
-        toHtml("<h1 style='color:gold'>🌟 Hello from Littlestar!</h1>")
-        toHtml("<p>This is <strong>web output</strong>.</p>")
-        toCss("body { font-family: sans-serif; background: #111; color: #eee; padding: 20px; }")
+        web:
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>My First Page</title>
+                <style>
+                    body { font-family: sans-serif; background: #111; color: #eee; padding: 20px; }
+                    h1 { color: gold; }
+                </style>
+            </head>
+            <body>
+                <h1>🌟 Hello from Littlestar!</h1>
+                <p>This is <strong>web output</strong>.</p>
+            </body>
+            </html>
 
     spark print:
         main(1)`,
@@ -2331,13 +2704,46 @@ const EXAMPLES = {
   webCard:`module littlestar:
 
     spark main(1):
-        toCss("body{font-family:sans-serif;background:#0f0f1e;display:flex;justify-content:center;padding:40px;}")
-        toCss(".card{background:#1a1a2e;color:white;border-radius:16px;padding:32px;text-align:center;border:2px solid #facc15;max-width:320px;}")
-        toCss(".avatar{font-size:64px;margin-bottom:16px;}")
-        toCss("h2{color:#facc15;margin:0 0 8px;}p{color:#9ca3af;}")
-        toHtml("<div class='card'><div class='avatar'>🌟</div>")
-        toHtml("<h2>Littlestar</h2>")
-        toHtml("<p>A beautiful scripting language for everyone</p></div>")
+        declare name = "Littlestar"
+        declare tagline = "A beautiful scripting language for everyone"
+
+        web:
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Profile Card</title>
+                <style>
+                    body {
+                        font-family: sans-serif;
+                        background: #0f0f1e;
+                        display: flex;
+                        justify-content: center;
+                        padding: 40px;
+                        margin: 0;
+                    }
+                    .card {
+                        background: #1a1a2e;
+                        color: white;
+                        border-radius: 16px;
+                        padding: 32px;
+                        text-align: center;
+                        border: 2px solid #facc15;
+                        max-width: 320px;
+                    }
+                    .avatar { font-size: 64px; margin-bottom: 16px; }
+                    h2 { color: #facc15; margin: 0 0 8px; }
+                    p { color: #9ca3af; }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <div class="avatar">🌟</div>
+                    <h2>{name}</h2>
+                    <p>{tagline}</p>
+                </div>
+            </body>
+            </html>
 
     spark print:
         main(1)`,
@@ -2519,6 +2925,120 @@ const EXAMPLES = {
         display("Date: " + datenow())
         display("Random: " + randInt(1, 100))
         display("=== Done! ===")
+
+    spark print:
+        main(1)`,
+
+  forLoop:`module littlestar:
+
+    spark main(1):
+        display("=== For Loop ===")
+        as i in 1 till 10:
+            display("i = " + i)
+
+        lbr
+        display("=== Countdown ===")
+        as n in 10 till 1:
+            display(n + "...")
+        display("🚀 Blast off!")
+
+    spark print:
+        main(1)`,
+
+  repeatN:`module littlestar:
+
+    spark main(1):
+        display("=== repeat this(5) ===")
+        repeat this(5):
+            display("Hello! 🌟")
+
+        lbr
+        display("=== repeat this(3) with counter ===")
+        declare count = 0
+        repeat this(3):
+            set count = count + 1
+            display("Iteration " + count)
+
+    spark print:
+        main(1)`,
+
+  solveEquation:`module littlestar:
+
+    spark main(1):
+        display("=== 🔣 Linear Equation Solver ===")
+        display("2x + 5 = 15  →  " + solve("2x + 5 = 15"))
+        display("3x - 9 = 0   →  " + solve("3x - 9 = 0"))
+        display("x + 7 = 20   →  " + solve("x + 7 = 20"))
+        display("4x = 20      →  " + solve("4x = 20"))
+
+        lbr
+        display("=== Quadratic Equations ===")
+        display("x^2 - 5x + 6 = 0  →  " + solve("x^2 - 5x + 6 = 0"))
+        display("x^2 - 4 = 0       →  " + solve("x^2 - 4 = 0"))
+        display("x^2 + 4 = 0       →  " + solve("x^2 + 4 = 0"))
+        display("x^2 - 2x + 1 = 0  →  " + solve("x^2 - 2x + 1 = 0"))
+
+        lbr
+        display("=== Simultaneous Linear Equations ===")
+        declare result = simultaneousLinear("2x + 3y = 12", "x - y = 1")
+        display("System:  2x + 3y = 12")
+        display("         x - y = 1")
+        display("Solution: x = " + result["x"] + ", y = " + result["y"])
+
+        lbr
+        declare result2 = simultaneousLinear("3x + 2y = 16", "x + y = 6")
+        display("System:  3x + 2y = 16")
+        display("         x + y = 6")
+        display("Solution: x = " + result2["x"] + ", y = " + result2["y"])
+
+    spark print:
+        main(1)`,
+
+  mathSets:`module littlestar:
+
+    spark main(1):
+        display("=== 🧮 Math Sets ===")
+        letset A = 1, 2, 3, 4, 5
+        letset B = 3, 4, 5, 6, 7
+        letset C = 1, 2, 3
+
+        display("A = " + A)
+        display("B = " + B)
+        display("C = " + C)
+        lbr
+
+        display("Union: A " + unionSymbol + " B = " + mathset("union", A, B))
+        display("Intersection: A " + intersectionSymbol + " B = " + mathset("intersection", A, B))
+        display("Difference: A - B = " + mathset("difference", A, B))
+        display("Symmetric Diff = " + mathset("symmetric", A, B))
+
+        lbr
+        display("=== Subset Checks ===")
+        display("C " + subsetSymbol + " A? " + mathset("isSubset", C, A))
+        display("A " + supersetSymbol + " C? " + mathset("isSuperset", A, C))
+        display("A equals B? " + mathset("isEqual", A, B))
+        display("Are A and B disjoint? " + mathset("isDisjoint", A, B))
+
+        lbr
+        display("=== Cardinality & Membership ===")
+        display("|A| = " + mathset("cardinality", A))
+        display("3 " + elementOfSymbol + " A? " + mathset("isMember", A, 3))
+        display("9 " + elementOfSymbol + " A? " + mathset("isMember", A, 9))
+
+        lbr
+        display("=== Auto-remove duplicates ===")
+        letset D = 1, 2, 2, 3, 3, 3, 4
+        display("D (from 1,2,2,3,3,3,4) = " + D)
+
+        lbr
+        display("=== Power Set of {1,2,3} ===")
+        display(mathset("powerset", C))
+
+        lbr
+        display("=== Cartesian Product ===")
+        letset X = 1, 2
+        letset Y = 3, 4
+        display("X × Y = " + mathset("cartesian", X, Y))
 
     spark print:
         main(1)`,
@@ -2794,7 +3314,7 @@ async function runActive(){
   const interp=new Littlestar();
   interp.callbacks.output=(t,type)=>appendLine(t,type||'normal');
   interp.callbacks.input=(p,type)=>modalInput(p,type);
-  interp.callbacks.web=(h,c)=>renderWebPreview(h,c);
+  interp.callbacks.web=(h)=>renderWebPreview(h);
 
   files.forEach(f=>{
     if(f.id!==activeFileId)interp.registerModule(f.name,f.code);
@@ -2826,7 +3346,7 @@ async function runAll(){
     const interp=new Littlestar();
     interp.callbacks.output=(t,type)=>appendLine(t,type||'normal');
     interp.callbacks.input=(p,type)=>modalInput(p,type);
-    interp.callbacks.web=(h,c)=>renderWebPreview(h,c);
+    interp.callbacks.web=(h)=>renderWebPreview(h);
     files.forEach(f=>{if(f.id!==file.id)interp.registerModule(f.name,f.code);});
     const result=await interp.run(file.code);
     if(!result.success){
