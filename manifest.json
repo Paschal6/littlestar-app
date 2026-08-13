@@ -2,7 +2,7 @@
   "name": "Littlestar Studio",
   "short_name": "Littlestar",
   "description": "A beginner-friendly programming language with 163+ built-in functions",
-  "start_url": "./app.html",
+  "start_url": "app.html",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0F0F1E",
