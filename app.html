@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="favicon.png" type="image/x-icon">
-  <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#facc15">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Littlestar">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-
-      <!-- Register Service Worker -->
-      <script>
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('service-worker.js')
-              .then(reg => console.log('🌟 Littlestar PWA ready!'))
-              .catch(err => console.log('SW failed:', err));
-          });
-        }
-      </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌟 Littlestar Playground</title>
@@ -714,7 +694,8 @@ class Littlestar {
     expr=expr
       .replace(/<>/g,'!=').replace(/\band\b/g,'&&').replace(/\bor\b/g,'||')
       .replace(/\bnot\b/g,'!').replace(/\s&\s/g,' && ')
-      .replace(/\byes\b/g,'true').replace(/\bno\b/g,'false').replace(/\blbr\b/g,'"\\n"');
+      .replace(/\byes\b/g,'true').replace(/\bno\b/g,'false').replace(/\blbr\b/g,'"\\n"')
+      .replace(/\bmod\b/g,'%');
 
     expr=expr.replace(/\b(\w+)\[([^\]]+)\]/g,(match,name,index)=>{
       if(name.startsWith('__'))return match;
@@ -784,8 +765,13 @@ class Littlestar {
 
     for(const fn of['convertCurrency','convert']){
       expr=expr.replace(new RegExp(`${fn}\\s*\\(([^)]*)\\)`,'g'),(match,args)=>{
-        const quoted=this.splitArgs(args).map(arg=>{
-          const t=arg.trim();return ALL_UNITS.has(t)?`"${t}"`:arg;
+        const parts=this.splitArgs(args);
+        const quoted=parts.map((arg,idx)=>{
+          const t=arg.trim();
+          // Only auto-quote units in positions 2 and 3 (index 1 and 2)
+          // Position 1 (index 0) is always the value/variable
+          if(idx===0)return arg;
+          return ALL_UNITS.has(t)?`"${t}"`:arg;
         }).join(',');
         return `${fn}(${quoted})`;
       });
@@ -1500,6 +1486,37 @@ class Littlestar {
       if(this.fixed.has(m[1]))throw new LittlestarError(`🌟 '${m[1]}' is FIXED!`);
       if(!(m[1] in this.vars))throw new LittlestarError(`🌟 '${m[1]}' was never declared.`);
       const varName=m[1],expr=m[2].trim();
+
+      // --- NEW: Handle input functions (input, readNum, readPassword, confirm, message) ---
+      const inputMatch=expr.match(/^(input|message|readNum|readPassword|confirm)\s*\((.*)\)\s*$/);
+      if(inputMatch){
+        const fnType=inputMatch[1];
+        const promptArg=inputMatch[2].trim();
+        const promptText=promptArg?String(this.eval(promptArg)):'';
+
+        if(fnType==='input'||fnType==='message'){
+          const defaultPrompt=fnType==='message'?'Enter message:':'Enter text:';
+          this.vars[varName]=await this.emit('input',promptText||defaultPrompt,'text');
+          return;
+        }
+        if(fnType==='readNum'){
+          const v=await this.emit('input',promptText||'Enter a number:','number');
+          if(isNaN(Number(v)))throw new LittlestarError(`🌟 '${v}' is not a number.`,`readNum only accepts numbers.`);
+          this.vars[varName]=Number(v);
+          return;
+        }
+        if(fnType==='readPassword'){
+          this.vars[varName]=await this.emit('input',promptText||'Enter password:','password');
+          return;
+        }
+        if(fnType==='confirm'){
+          const answer=await this.emit('input',promptText||'Are you sure?','confirm');
+          this.vars[varName]=(answer==='yes'||answer===true);
+          return;
+        }
+      }
+      // --- END NEW ---
+
       const fnCall=expr.match(/^(\w+)\s*\((.*)\)\s*$/);
       if(fnCall&&this.funcs[fnCall[1]]){
         const fn=this.funcs[fnCall[1]];
